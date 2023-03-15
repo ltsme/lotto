@@ -1,5 +1,5 @@
 flutter_native_splash:
-  background_image: "assets/images/splash.png"
+  background_image: "assets/images/splash.jpg"
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
@@ -23,7 +23,7 @@ flutter_native_splash:
     # 640 pixels in diameter.
     # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
     # 768 pixels in diameter.
-    image: assets/images/splash.png
+    image: assets/images/splash.jpg
 
     # Splash screen background color.
     #color: "#42a5f5"   

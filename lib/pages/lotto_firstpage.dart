@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lotto/pages/getnumberpage.dart';
-import 'package:lotto/pages/lotto_secondpage.dart';
+import 'package:lotto/pages/winningnumpage.dart';
+import 'package:lotto/widgets/qrscanpage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -23,29 +24,7 @@ class LottoFirstPage extends StatefulWidget {
 
 class _LottoFirstPageState extends State<LottoFirstPage> {
   /// 배경 이미지 URL
-  final String backImg = "assets/images/lotto_1.png";
-
-  // 추천 번호
-  final List<Map<String, String>> recommendMenu = const [
-    {
-      "imgUrl": "https://i.ibb.co/SwGPpzR/9200000003687-20211118142543832.jpg",
-    },
-    {
-      "imgUrl": "https://i.ibb.co/JHVXZ72/9200000003690-20211118142702357.jpg",
-    },
-    {
-      "imgUrl": "https://i.ibb.co/M91G17c/9200000003693-20211118142933650.jpg",
-    },
-    {
-      "imgUrl": "https://i.ibb.co/jyZK4C9/9200000003696-20211118143125337.jpg",
-    },
-    {
-      "imgUrl": "https://i.ibb.co/DKkV0rw/9200000003699-20211118143249044.jpg",
-    },
-  ];
-
-  /// 크리스마스 이벤트 이미지 URL
-  final String eventImg = 'assets/images/lotto_2.png';
+  final String titleImg = "assets/images/lotto_title.png";
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +41,8 @@ class _LottoFirstPageState extends State<LottoFirstPage> {
                 pinned: true, // 스크롤 시 bottom 영역을 고정할 지
                 snap: false, // 중간에 멈출 때 자동으로 AppBar를 펼쳐서 보여줄지
                 floating: true, // AppBar를 화면에 띄울지, 아니면 컬럼처럼 최 상단에 놓을 지
-                expandedHeight: 252,
-                backgroundColor: Colors.white,
+                expandedHeight: 200,
+                backgroundColor: Colors.red,
 
                 // ---스크롤 시 사라질 영역, flexibleSpace
                 flexibleSpace: FlexibleSpaceBar(
@@ -72,10 +51,10 @@ class _LottoFirstPageState extends State<LottoFirstPage> {
                     children: [
                       // 백 그라운드 이미지
                       Positioned.fill(
-                        bottom: 50,
+                        bottom: 40,
                         child: Image.asset(
-                          backImg,
-                          fit: BoxFit.fill,
+                          titleImg,
+                          fit: BoxFit.contain,
                         ),
                       ),
                       Positioned(
@@ -91,25 +70,6 @@ class _LottoFirstPageState extends State<LottoFirstPage> {
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            SizedBox(height: 40),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "이번 추첨일 까지 / ",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  "D-day ?",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red),
-                                )
-                              ],
                             ),
                           ],
                         ),
@@ -127,23 +87,20 @@ class _LottoFirstPageState extends State<LottoFirstPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          GestureDetector(
-                            onTap: () => _launchURL(naverUrl),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.sentiment_very_satisfied,
-                                  color: Colors.grey,
-                                ),
-                                SizedBox(width: 6),
-                                Text(
-                                  "오늘의 운세",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ],
-                            ),
+                          Text(
+                            "이번 추첨일 까지 / ",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
+                          Text(
+                            "D-day ?",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red),
+                          )
                         ],
                       ),
                     ),
@@ -156,24 +113,57 @@ class _LottoFirstPageState extends State<LottoFirstPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 12),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          eventImg,
-                        ),
+                    Container(
+                      color: Colors.grey,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => QrScanPage(),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.qr_code,
+                                  size: 100,
+                                ),
+                              ),
+                              SizedBox(width: 100),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => WinningNumPage(),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.check,
+                                  size: 100,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 100),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () => _launchURL(naverUrl),
+                                icon: Icon(
+                                  Icons.money,
+                                  size: 100,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 32),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Text("버튼 두개 들어갈 곳 (배민 느낌) \n QR 촬영, 번호 확인")),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      height: 150, // height를 가져야 ListView를 Column에 넣을 수 있다.
-                      child: Row(),
                     ),
                     const SizedBox(height: 24),
                     Padding(
@@ -193,6 +183,15 @@ class _LottoFirstPageState extends State<LottoFirstPage> {
                             TextSpan(text: "찾기"),
                           ],
                         ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      child: Container(
+                        width: 400,
+                        height: 300,
+                        color: Colors.blue,
                       ),
                     ),
                   ],
