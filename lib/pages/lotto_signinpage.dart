@@ -1,8 +1,8 @@
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
+class LottoSignInPage extends StatelessWidget {
+  const LottoSignInPage({super.key});
 
   @override
   Widget build(BuildContext context) {

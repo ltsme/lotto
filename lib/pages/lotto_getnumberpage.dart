@@ -11,6 +11,7 @@ class LottoGetNumberPage extends StatefulWidget {
 }
 
 class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
+  // 로또 공 위젯
   void _abc(String json) {
     setState(() {
       textWidget = LottoBallWidget(data: jsonDecode(json));

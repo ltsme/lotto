@@ -1,10 +1,10 @@
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:lotto/lotto_main.dart';
-import 'package:lotto/pages/signinpage.dart';
+import 'package:lotto/pages/lotto_mainpage_home.dart';
+import 'package:lotto/pages/lotto_signinpage.dart';
 
-class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({super.key});
+class LottoOnboardingPage extends StatelessWidget {
+  const LottoOnboardingPage({super.key});
 
   /// 크리스마스 이벤트 이미지 URL
   final String eventImg = 'assets/images/advertise_image.png';
@@ -131,7 +131,7 @@ class OnboardingPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => LottoHomePage(),
+                      builder: (context) => LottoMainPageHome(),
                     ),
                   );
                 },
@@ -162,7 +162,7 @@ class OnboardingPage extends StatelessWidget {
         onDone: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const SignInPage()),
+            MaterialPageRoute(builder: (context) => const LottoSignInPage()),
           );
         },
       ),

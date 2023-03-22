@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'pages/lotto_firstpage.dart';
-import 'pages/lotto_thirdpage.dart';
-import 'pages/lotto_secondpage.dart';
-import 'main.dart';
+import 'lotto_mainpage_home.dart';
+import 'lotto_mainpage_mypage.dart';
+import 'lotto_mainpage_lottolist.dart';
+import '../main.dart';
 
-class LottoHomePage extends StatefulWidget {
-  const LottoHomePage({Key? key}) : super(key: key);
+class LottoMainPage extends StatefulWidget {
+  const LottoMainPage({Key? key}) : super(key: key);
 
   @override
-  State<LottoHomePage> createState() => _LottoHomePage();
+  State<LottoMainPage> createState() => _LottoMainPage();
 }
 
-class _LottoHomePage extends State<LottoHomePage> {
+class _LottoMainPage extends State<LottoMainPage> {
   int currentIndex = 0;
 
   @override
@@ -99,9 +99,9 @@ class _LottoHomePage extends State<LottoHomePage> {
       body: IndexedStack(
         index: currentIndex,
         children: [
-          LottoFirstPage(),
-          LottoSecondPage(),
-          LottoThirdPage(),
+          LottoMainPageHome(),
+          LottoMainPageLottolist(),
+          LottoMainPageMyPage(),
         ],
       ),
 

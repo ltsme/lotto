@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class LottoSecondPage extends StatelessWidget {
-  const LottoSecondPage({super.key});
+class LottoMainPageLottolist extends StatelessWidget {
+  const LottoMainPageLottolist({super.key});
 
   @override
   Widget build(BuildContext context) {

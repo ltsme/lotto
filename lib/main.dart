@@ -1,5 +1,5 @@
-import 'package:lotto/widgets/onboardingpage.dart';
-import 'lotto_main.dart';
+import 'package:lotto/pages/lotto_mainpage.dart';
+import 'package:lotto/pages/lotto_onboardingpage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: GoogleFonts.getTextTheme('Jua')),
       // 삼항 연산자를 이용하여, bool 값에 따라 호출을 다르게 한다.
-      home: isOnboarded ? const LottoHomePage() : const OnboardingPage(),
+      home: isOnboarded ? const LottoMainPage() : const LottoOnboardingPage(),
 
       // Shared_preference에 isOnboarde에 해당하는 bool값 지정
       // preferences.setBool("isOnboarded", true);
