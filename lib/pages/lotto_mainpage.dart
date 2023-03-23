@@ -81,14 +81,6 @@ class _LottoMainPage extends State<LottoMainPage> {
         // title: Image.asset('assets/images/logo.png', height: 32),
         actions: [
           IconButton(
-            onPressed: () {
-              preferences.clear(); // 테스트 용
-            },
-            icon: const Icon(
-              Icons.delete,
-            ),
-          ),
-          IconButton(
             onPressed: () {},
             icon: const Icon(
               Icons.settings,
@@ -117,7 +109,7 @@ class _LottoMainPage extends State<LottoMainPage> {
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed, // 선택시 아이콘 움직이지 않기
         backgroundColor: Colors.white.withOpacity(0.7),
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "홈페이지"),
           BottomNavigationBarItem(
               icon: Icon(Icons.featured_play_list_outlined), label: "뽑기 내역"),

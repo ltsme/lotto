@@ -18,7 +18,17 @@ Color accentColor = const Color.fromARGB(255, 199, 176, 121);
 String naverUrl =
     'https://m.search.naver.com/search.naver?sm=mtp_hty.top&where=m&query=%EB%84%A4%EC%9D%B4%EB%B2%84+%EC%9A%B4%EC%84%B8';
 
+// Lotto API 데이터
+var lottoData;
 int lottoRoundNum = 1059; // 임시로 상수 사용, 이후 업데이트 예정
+
+// 오늘 날짜
+var nowDate = DateTime.now();
+// 오늘 기준 토요일
+var saterdayDate =
+    DateTime(nowDate.year, nowDate.month, nowDate.day + (7 - nowDate.weekday));
+// D-day
+var dDayDate = saterdayDate.difference(nowDate);
 
 class LottoMainPageHome extends StatefulWidget {
   const LottoMainPageHome({super.key});
@@ -28,13 +38,11 @@ class LottoMainPageHome extends StatefulWidget {
 }
 
 class _LottoMainPageHome extends State<LottoMainPageHome> {
-  // Lotto API 데이터
-  var lottoData;
-  final textController = TextEditingController(text: '$lottoRoundNum');
-  final dialogController = TextEditingController(text: '');
-
   /// 배경 이미지 URL
   final String titleImg = "assets/images/lotto_title.png";
+
+  final textController = TextEditingController();
+  final dialogController = TextEditingController(text: '');
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +60,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                 snap: false, // 중간에 멈출 때 자동으로 AppBar를 펼쳐서 보여줄지
                 floating: true, // AppBar를 화면에 띄울지, 아니면 컬럼처럼 최 상단에 놓을 지
                 expandedHeight: 200,
-                backgroundColor: Colors.red,
 
                 // ---스크롤 시 사라질 영역, flexibleSpace
                 flexibleSpace: FlexibleSpaceBar(
@@ -95,22 +102,47 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                     height: 52,
                     color: Colors.white,
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: const [
-                          Text(
-                            "이번 추첨일 까지 / ",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.arrow_circle_up_sharp,
+                                size: 24.0,
+                                color: Colors.black,
+                              ),
+                              TextButton(
+                                onPressed: () {},
+                                child: const Text(
+                                  '위로 돌아가기',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "D-day ?",
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red),
-                          )
+                          Row(
+                            children: [
+                              const Text(
+                                "이번 추첨일 까지 / ",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                // 삼항 연산자를 이용해 당일인 경우 0, 나머지는 차이만큼 표시
+                                "- ${dDayDate.inDays == 0 ? "0" : dDayDate.inDays}일",
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -206,7 +238,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                           horizontal: 24, vertical: 12),
                       child: Container(
                         width: 400,
-                        height: 300,
+                        height: 1000,
                         color: Colors.blue,
                       ),
                     ),
@@ -258,7 +290,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
 
   // 당첨 회차 입력하는 대화 상자 메소드
   void _winningNumDialog() {
-    String dialogTxt = '';
+    textController.text = '$lottoRoundNum';
     showDialog(
       context: context,
       barrierDismissible: true, //  빈 곳을 눌렀을 때, 창이 닫히는 지
@@ -287,6 +319,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
             ],
           ),
           content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             // alertDialog에 Column 넣을 경우 사이즈 고정
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -301,20 +334,22 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                       maxLength: 4,
                       enabled: true,
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        counterText: '',
-                      ),
+                      decoration: const InputDecoration(counterText: ''),
                     ),
                   ),
                   const Text(" 회"),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: TextField(
+                      style: const TextStyle(color: Colors.amber),
+                      controller: dialogController,
+                      enabled: false,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
                 ],
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                style: TextStyle(color: Colors.amber),
-                controller: dialogController,
-                enabled: false,
-                decoration: InputDecoration(border: InputBorder.none),
               ),
             ],
           ),
@@ -323,7 +358,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
               child: const Text("취소"),
               onPressed: () {
                 Navigator.pop(context);
-                textController.text = '';
+                textController.text = '$lottoRoundNum';
                 dialogController.text = '';
               },
             ),
@@ -335,7 +370,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                     dialogController.text = '숫자를 입력해 주세요!';
                   });
                 } else {
-                  textController.text = '';
+                  textController.text = '$lottoRoundNum';
                   dialogController.text = '';
                   Navigator.pop(context);
                   _showWinningNum(int.parse(textController.text));
@@ -362,9 +397,24 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
       // 총 상금
       String totSellamnt = lottoData['totSellamnt'].toString();
       // 1등 상금
-      String firstWinamnt = lottoData['dfirstWinamnt'].toString();
+      String firstWinamnt = lottoData['firstWinamnt'].toString();
       // 1등 당첨자 수
       String firstPrzwnerCo = lottoData['firstPrzwnerCo'].toString();
+      // 당첨번호
+      int drwtNo1 = lottoData['drwtNo1'];
+      int drwtNo2 = lottoData['drwtNo2'];
+      int drwtNo3 = lottoData['drwtNo3'];
+      int drwtNo4 = lottoData['drwtNo4'];
+      int drwtNo5 = lottoData['drwtNo5'];
+      int drwtNo6 = lottoData['drwtNo6'];
+      List<int> drwtNoes = [
+        drwtNo1,
+        drwtNo2,
+        drwtNo3,
+        drwtNo4,
+        drwtNo5,
+        drwtNo6
+      ];
 
       showDialog(
         barrierDismissible: true, //  빈 곳을 눌렀을 때, 창이 닫히는 지
@@ -421,7 +471,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                //_getWinningNum()
+                _getWinningNum(drwtNoes)
               ],
             ),
           );
@@ -430,12 +480,11 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
     }
   }
 
-  _getWinningNum() {
+  _getWinningNum(List<int> drwtNoes) {
     List<int> lottoNum = [];
 
-    for (var i = 1; i < 7; i++) {
-      var num = i * 5;
-      lottoNum.add(num);
+    for (var i = 0; i < 6; i++) {
+      lottoNum.add(drwtNoes[i]);
     }
 
     // 배열 정렬
