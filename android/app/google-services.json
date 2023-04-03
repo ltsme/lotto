@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "663024544651",
+    "project_id": "lottomaker-5de2d",
+    "storage_bucket": "lottomaker-5de2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663024544651:android:edd47d363ea2bf9bbe1d8e",
+        "android_client_info": {
+          "package_name": "com.ltsme.lotto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "663024544651-op2cb6mjskhfeiqvbleui3am3hb9k4bb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1UStGYwwOksb5met04m8rE-poPh80-sQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "663024544651-op2cb6mjskhfeiqvbleui3am3hb9k4bb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

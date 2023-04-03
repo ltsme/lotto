@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:lotto/pages/lotto_getnumberpage.dart';
 import 'package:lotto/widgets/LoadingPage.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
@@ -7,12 +8,19 @@ import 'package:lotto/widgets/qrscan.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:http/http.dart' as http;
+import 'package:kakaomap_webview/kakaomap_webview.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 // Lotto 앱 메인 컬러
 Color appMainColor = Colors.blue.shade400;
 
 //포인트 색상
 Color accentColor = const Color.fromARGB(255, 199, 176, 121);
+
+// Kakao Api JavaScript 키
+var kakaoMapKey = '953fcd9b73a5574241b4e6185312b34d';
+
+late WebViewController _mapController;
 
 // 오늘 날짜
 var nowDate = DateTime.now();
@@ -21,6 +29,9 @@ var saterdayDate =
     DateTime(nowDate.year, nowDate.month, nowDate.day + (7 - nowDate.weekday));
 // D-day
 var dDayDate = saterdayDate.difference(nowDate);
+
+double lat = 30;
+double lon = 120;
 
 class LottoMainPageHome extends StatefulWidget {
   const LottoMainPageHome({super.key});
@@ -52,8 +63,22 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   @override
   void initState() {
     getLottoDataInit(thisRoundDrwNo);
+    _getCurrentLocation();
     super.initState();
   }
+
+  // 위 경도 구하는 메소드
+  Future _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    lat = position.latitude;
+    lon = position.longitude;
+    print("lat = $lat");
+    print("lon = $lon");
+  }
+
+  _setLocation() {}
 
   getLottoDataInit(var lottoRoundNum) async {
     var url = Uri.parse(
@@ -229,7 +254,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                               ),
                             ),
                             // 이번 회차 당첨번호 위젯
-
                             _setWinningNum(thisRoundLottoData),
 
                             Row(
@@ -252,7 +276,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                       icon: Image.asset(
                                         'assets/images/icon_qr.png',
                                       ),
-                                      iconSize: 100,
+                                      iconSize: 80,
                                       tooltip: 'QR스캔하기',
                                     ),
                                     const Text('QR스캔하기')
@@ -267,7 +291,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                       },
                                       icon: Image.asset(
                                           'assets/images/icon_lottery.png'),
-                                      iconSize: 100,
+                                      iconSize: 80,
                                       tooltip: '당첨번호 확인',
                                     ),
                                     const Text('당첨번호 확인')
@@ -280,7 +304,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                       onPressed: () => _launchURL(naverUrl),
                                       icon: Image.asset(
                                           'assets/images/icon_clover.png'),
-                                      iconSize: 100,
+                                      iconSize: 80,
                                       tooltip: '오늘의 운세',
                                     ),
                                     const Text('오늘의 운세')
@@ -288,6 +312,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 16),
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               child: RichText(
@@ -307,14 +332,41 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                 ),
                               ),
                             ),
+
+                            // 카카오 맵 띄우기
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Container(
+                              child: KakaoMapView(
+                                mapController: (controller) {
+                                  _mapController = controller;
+                                },
                                 width: 400,
-                                height: 1000,
-                                color: Colors.blue,
+                                height: 400,
+                                kakaoMapKey: kakaoMapKey,
+                                lat: lat,
+                                lng: lon,
+                                showMapTypeControl: true,
+                                showZoomControl: true,
+                                draggableMarker: true,
+                                markerImageURL:
+                                    'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
+                                onTapMarker: (message) {
+                                  //event callback when the marker is tapped
+                                  print("lat lon is $lat $lon");
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Marker is Clicked"),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  _getCurrentLocation;
+                                  print("button lat lon is $lat $lon");
+                                },
+                                child: Text("again"))
                           ],
                         ),
                       ),
@@ -558,10 +610,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
       'drwtNo6': lottoData['drwtNo6'],
     });
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: LottoBallWidget(data: jsonDecode(json)),
-    );
+    return LottoBallWidget(data: jsonDecode(json));
   }
 
   void _launchURL(url) async {

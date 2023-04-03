@@ -1,6 +1,7 @@
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lotto/pages/lotto_mainpage.dart';
+import 'package:lotto/pages/lotto_signuppage.dart';
 
 class LottoOnboardingPage extends StatelessWidget {
   const LottoOnboardingPage({super.key});
@@ -71,7 +72,7 @@ class LottoOnboardingPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const LottoMainPage(),
+                      builder: (context) => const LottoSignUpPage(),
                     ),
                   );
                 },
