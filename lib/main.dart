@@ -5,6 +5,7 @@ import 'package:lotto/pages/lotto_onboardingpage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lotto/widgets/auth_service.dart';
+import 'package:lotto/widgets/lotto_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +18,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => AuthService()),
+      ChangeNotifierProvider(create: (context) => LottoService()),
     ],
     child: const MyApp(),
   ));

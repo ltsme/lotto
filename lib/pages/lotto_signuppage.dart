@@ -74,7 +74,8 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("로그인 성공")),
                               );
-                              // 로그인 성공 시 HomePage로 이동
+
+                              // 로그인 성공 시 HomePage로 이동하면서 uid를 보내줌
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(

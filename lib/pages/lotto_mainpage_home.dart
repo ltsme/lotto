@@ -384,7 +384,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          color: Colors.blue.shade500,
+                          color: appMainColor,
                           borderRadius: BorderRadius.circular(64),
                         ),
                         child: Row(
