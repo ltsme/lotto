@@ -19,7 +19,9 @@ class LottoService extends ChangeNotifier {
     });
   }
 
-  void delete(String docId) {
+  void delete(String docId) async {
     // LottoGame Delete
+    await lottoCollection.doc(docId).delete();
+    notifyListeners();
   }
 }

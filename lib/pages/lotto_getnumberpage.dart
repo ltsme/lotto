@@ -264,7 +264,7 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
   }
 
   // var 형태의 json 반환
-  _setLottoNum(List<int> lottoNum) {
+  _setLottoNum(List<dynamic> lottoNum) {
     var json = jsonEncode({
       'drwtNo1': lottoNum[0],
       'drwtNo2': lottoNum[1],
@@ -305,6 +305,7 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
                 User? user = authService.currentUser()!;
                 LottoService lottoService = context.read<LottoService>();
 
+                //if(){              }else{                }
                 lottoService.create(user.uid, lottogames);
                 // var array = [];
                 // var readRes =

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lotto/pages/lotto_onboardingpage.dart';
+import 'package:provider/provider.dart';
+import '../widgets/auth_service.dart';
 import 'lotto_mainpage_home.dart';
 import 'lotto_mainpage_mypage.dart';
 import 'lotto_mainpage_lottolist.dart';
-import '../main.dart';
 
 class LottoMainPage extends StatefulWidget {
   const LottoMainPage({Key? key}) : super(key: key);
@@ -81,9 +83,47 @@ class _LottoMainPage extends State<LottoMainPage> {
         // title: Image.asset('assets/images/logo.png', height: 32),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      insetPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      title: const Text(
+                        '로그아웃 하나요?',
+                        style: TextStyle(color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                      actions: [
+                        TextButton(
+                          child: const Text("취소"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        TextButton(
+                          child: const Text("로그아웃"),
+                          onPressed: () {
+                            AuthService authService =
+                                context.read<AuthService>();
+                            authService.signOut();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LottoOnboardingPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  });
+            },
             icon: const Icon(
-              Icons.settings,
+              Icons.logout_outlined,
             ),
           ),
         ],
