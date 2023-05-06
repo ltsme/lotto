@@ -90,320 +90,310 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
         : Scaffold(
             backgroundColor: Colors.white,
             // 뒤로가기 종료 기능을 위한 WillPopScope 위젯
-            body: WillPopScope(
-              onWillPop: willPopScope,
-              child: Stack(
-                // 우측 하단에 플로팅 '로또 번호 뽑기' 아이콘 띄우기 위해 Stack으로 구현
-                children: [
-                  // Sliver 위젯을 이용하기 위해 CustomScrollView를 사용.
-                  CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        automaticallyImplyLeading:
-                            false, // App Bar에서 뒤로가기 버튼 숨기기
-                        pinned: true, // 스크롤 시 bottom 영역을 고정할 지
-                        snap: false, // 중간에 멈출 때 자동으로 AppBar를 펼쳐서 보여줄지
-                        floating: true, // AppBar를 화면에 띄울지, 아니면 컬럼처럼 최 상단에 놓을 지
-                        expandedHeight: 200,
+            body: Stack(
+              // 우측 하단에 플로팅 '로또 번호 뽑기' 아이콘 띄우기 위해 Stack으로 구현
+              children: [
+                // Sliver 위젯을 이용하기 위해 CustomScrollView를 사용.
+                CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      automaticallyImplyLeading: false, // App Bar에서 뒤로가기 버튼 숨기기
+                      pinned: true, // 스크롤 시 bottom 영역을 고정할 지
+                      snap: false, // 중간에 멈출 때 자동으로 AppBar를 펼쳐서 보여줄지
+                      floating: true, // AppBar를 화면에 띄울지, 아니면 컬럼처럼 최 상단에 놓을 지
+                      expandedHeight: 200,
 
-                        // ---스크롤 시 사라질 영역, flexibleSpace
-                        flexibleSpace: FlexibleSpaceBar(
-                          collapseMode: CollapseMode.pin,
-                          background: Stack(
-                            children: [
-                              // 백 그라운드 이미지
-                              Positioned.fill(
-                                bottom: 40,
-                                child: Image.asset(
-                                  titleImg,
-                                  fit: BoxFit.contain,
-                                ),
+                      // ---스크롤 시 사라질 영역, flexibleSpace
+                      flexibleSpace: FlexibleSpaceBar(
+                        collapseMode: CollapseMode.pin,
+                        background: Stack(
+                          children: [
+                            // 백 그라운드 이미지
+                            Positioned.fill(
+                              bottom: 40,
+                              child: Image.asset(
+                                titleImg,
+                                fit: BoxFit.contain,
                               ),
-                              Positioned(
-                                left: 24,
-                                right: 24,
-                                top: 48,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
-                                    Text(
-                                      "로또 앱과 함께 \n1등까지! 🍀",
+                            ),
+                            Positioned(
+                              left: 24,
+                              right: 24,
+                              top: 48,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    "로또 앱과 함께 \n1등까지! 🍀",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // ---스크롤 시 남아있는 영역, bottom
+                      // SliverAppBar의 bottom은 PrefereedSize 위젯으로 시작해야만 한다.
+                      bottom: PreferredSize(
+                        preferredSize: Size.fromHeight(52), // 영역의 높이
+                        child: Container(
+                          height: 52,
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // Row(
+                                //   children: [
+                                //     const Icon(
+                                //       Icons.arrow_circle_up_sharp,
+                                //       size: 24.0,
+                                //       color: Colors.black,
+                                //     ),
+                                //     TextButton(
+                                //       onPressed: () {},
+                                //       child: const Text(
+                                //         '위로 돌아가기',
+                                //         style: TextStyle(
+                                //           fontSize: 18,
+                                //           color: Colors.black,
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "이번 추첨일 까지 / ",
                                       style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      // 삼항 연산자를 이용해 당일인 경우 0, 나머지는 차이만큼 표시
+                                      "- ${dDayDate.inDays == 0 ? "0" : dDayDate.inDays}일",
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                        // ---스크롤 시 남아있는 영역, bottom
-                        // SliverAppBar의 bottom은 PrefereedSize 위젯으로 시작해야만 한다.
-                        bottom: PreferredSize(
-                          preferredSize: Size.fromHeight(52), // 영역의 높이
-                          child: Container(
-                            height: 52,
-                            color: Colors.white,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                    ),
+                    // CustomScrollView 안에서는 모든 첫 번째 위젯이 Sliver로 구현 되어야한다.
+                    // SliverToBoxAdapter는 Container와 같은 위젯으로 생각하자.
+                    SliverToBoxAdapter(
+                      // 메인화면 Body 부분 메인 Padding
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 광고 그림 위젯
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(
+                            //       horizontal: 20, vertical: 12),
+                            //   child: ClipRRect(
+                            //     borderRadius: BorderRadius.circular(8),
+                            //     child: Image.asset('assets/images/advertise_image.png'),
+                            //   ),
+                            // ),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 16),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // Row(
-                                  //   children: [
-                                  //     const Icon(
-                                  //       Icons.arrow_circle_up_sharp,
-                                  //       size: 24.0,
-                                  //       color: Colors.black,
-                                  //     ),
-                                  //     TextButton(
-                                  //       onPressed: () {},
-                                  //       child: const Text(
-                                  //         '위로 돌아가기',
-                                  //         style: TextStyle(
-                                  //           fontSize: 18,
-                                  //           color: Colors.black,
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  Row(
+                                  // 기능 1. QR 코드 스캔
+
+                                  Column(
                                     children: [
-                                      const Text(
-                                        "이번 추첨일 까지 / ",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
+                                      IconButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => QrScan(),
+                                            ),
+                                          );
+                                        },
+                                        icon: Image.asset(
+                                          'assets/images/icon_qr.png',
+                                        ),
+                                        iconSize: 80,
+                                        tooltip: 'QR스캔하기',
                                       ),
-                                      Text(
-                                        // 삼항 연산자를 이용해 당일인 경우 0, 나머지는 차이만큼 표시
-                                        "- ${dDayDate.inDays == 0 ? "0" : dDayDate.inDays}일",
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.red),
+                                      const Text('QR스캔하기')
+                                    ],
+                                  ),
+                                  // 기능 2. 로또 회차 당첨번호 확인
+                                  Column(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          _winningNumDialog();
+                                        },
+                                        icon: Image.asset(
+                                            'assets/images/icon_lottery.png'),
+                                        iconSize: 80,
+                                        tooltip: '당첨번호 확인',
                                       ),
+                                      const Text('당첨번호 확인')
+                                    ],
+                                  ),
+                                  // 기능 3. 오늘의 운세 (네이버)
+                                  Column(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () => _launchURL(naverUrl),
+                                        icon: Image.asset(
+                                            'assets/images/icon_clover.png'),
+                                        iconSize: 80,
+                                        tooltip: '오늘의 운세',
+                                      ),
+                                      const Text('오늘의 운세')
                                     ],
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      // CustomScrollView 안에서는 모든 첫 번째 위젯이 Sliver로 구현 되어야한다.
-                      // SliverToBoxAdapter는 Container와 같은 위젯으로 생각하자.
-                      SliverToBoxAdapter(
-                        // 메인화면 Body 부분 메인 Padding
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // 광고 그림 위젯
-                              // Padding(
-                              //   padding: const EdgeInsets.symmetric(
-                              //       horizontal: 20, vertical: 12),
-                              //   child: ClipRRect(
-                              //     borderRadius: BorderRadius.circular(8),
-                              //     child: Image.asset('assets/images/advertise_image.png'),
-                              //   ),
-                              // ),
 
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 16),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                            // 이번 회차 당첨번호
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 24),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
                                   children: [
-                                    // 기능 1. QR 코드 스캔
-
-                                    Column(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => QrScan(),
-                                              ),
-                                            );
-                                          },
-                                          icon: Image.asset(
-                                            'assets/images/icon_qr.png',
-                                          ),
-                                          iconSize: 80,
-                                          tooltip: 'QR스캔하기',
-                                        ),
-                                        const Text('QR스캔하기')
-                                      ],
+                                    const TextSpan(text: "이번 회차 "),
+                                    const TextSpan(
+                                      text: "당첨 번호 ",
+                                      style: TextStyle(color: Colors.green),
                                     ),
-                                    // 기능 2. 로또 회차 당첨번호 확인
-                                    Column(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            _winningNumDialog();
-                                          },
-                                          icon: Image.asset(
-                                              'assets/images/icon_lottery.png'),
-                                          iconSize: 80,
-                                          tooltip: '당첨번호 확인',
-                                        ),
-                                        const Text('당첨번호 확인')
-                                      ],
-                                    ),
-                                    // 기능 3. 오늘의 운세 (네이버)
-                                    Column(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () => _launchURL(naverUrl),
-                                          icon: Image.asset(
-                                              'assets/images/icon_clover.png'),
-                                          iconSize: 80,
-                                          tooltip: '오늘의 운세',
-                                        ),
-                                        const Text('오늘의 운세')
-                                      ],
+                                    TextSpan(
+                                      text:
+                                          " (${thisRoundlottoData['drwNoDate']})",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-
-                              // 이번 회차 당첨번호
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 24),
-                                child: RichText(
-                                  text: TextSpan(
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    children: [
-                                      const TextSpan(text: "이번 회차 "),
-                                      const TextSpan(
-                                        text: "당첨 번호 ",
-                                        style: TextStyle(color: Colors.green),
-                                      ),
-                                      TextSpan(
-                                        text:
-                                            " (${thisRoundlottoData['drwNoDate']})",
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              // 이번 회차 당첨번호 위젯
-                              _setWinningNum(thisRoundlottoData),
-
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 32),
-                                child: RichText(
-                                  text: const TextSpan(
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                    children: [
-                                      TextSpan(text: "주변 "),
-                                      TextSpan(
-                                        text: "로또 판매점 ",
-                                        style: TextStyle(color: Colors.green),
-                                      ),
-                                      TextSpan(text: "찾기"),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              // 카카오 맵 띄우기
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  color: Colors.grey,
-                                  child: KakaoMapView(
-                                    mapController: (controller) {
-                                      _mapController = controller;
-                                    },
-                                    width: 300,
-                                    height: 400,
-                                    kakaoMapKey: kakaoMapKey,
-                                    lat: lat,
-                                    lng: lon,
-                                    showMapTypeControl: true,
-                                    showZoomControl: true,
-                                    draggableMarker: true,
-                                    markerImageURL:
-                                        'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
-                                    onTapMarker: (message) {
-                                      //event callback when the marker is tapped
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text("Marker is Clicked"),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Deliverys 위젯 추가 위해 Stack 위젯으로 감싼다.
-                  // 기능 4. 로또 번호 생성하기
-                  Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LottoGetNumberPage(),
-                        ),
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: appMainColor,
-                          borderRadius: BorderRadius.circular(64),
-                        ),
-                        child: Row(
-                          children: [
-                            const Text(
-                              "로또 번호 뽑기",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
                             ),
-                            const SizedBox(width: 10),
-                            Image.asset('assets/images/lottoball.png',
-                                width: 45),
+
+                            // 이번 회차 당첨번호 위젯
+                            _setWinningNum(thisRoundlottoData),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 32),
+                              child: RichText(
+                                text: const TextSpan(
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                  children: [
+                                    TextSpan(text: "주변 "),
+                                    TextSpan(
+                                      text: "로또 판매점 ",
+                                      style: TextStyle(color: Colors.green),
+                                    ),
+                                    TextSpan(text: "찾기"),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            // 카카오 맵 띄우기
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 12),
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                color: Colors.grey,
+                                child: KakaoMapView(
+                                  mapController: (controller) {
+                                    _mapController = controller;
+                                  },
+                                  width: 300,
+                                  height: 400,
+                                  kakaoMapKey: kakaoMapKey,
+                                  lat: lat,
+                                  lng: lon,
+                                  showMapTypeControl: true,
+                                  showZoomControl: true,
+                                  draggableMarker: true,
+                                  markerImageURL:
+                                      'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
+                                  onTapMarker: (message) {
+                                    //event callback when the marker is tapped
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Marker is Clicked"),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ),
+                  ],
+                ),
+                // Deliverys 위젯 추가 위해 Stack 위젯으로 감싼다.
+                // 기능 4. 로또 번호 생성하기
+                Positioned(
+                  bottom: 16,
+                  right: 16,
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LottoGetNumberPage(),
+                      ),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: appMainColor,
+                        borderRadius: BorderRadius.circular(64),
+                      ),
+                      child: Row(
+                        children: [
+                          const Text(
+                            "로또 번호 뽑기",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                          const SizedBox(width: 10),
+                          Image.asset('assets/images/lottoball.png', width: 45),
+                        ],
+                      ),
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
   } // build

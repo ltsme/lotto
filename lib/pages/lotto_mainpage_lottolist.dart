@@ -25,52 +25,49 @@ class _LottoMainPageLottolistState extends State<LottoMainPageLottolist> {
         // User 데이터를 받아 옴, Null은 불가능
         User user = context.read<AuthService>().currentUser()!;
         return Scaffold(
-          body: WillPopScope(
-            onWillPop: willPopScope,
-            child: Column(
-              children: [
-                Expanded(
-                  child: FutureBuilder<QuerySnapshot>(
-                      // CRUD의 Read
-                      future: lottoservice.read(user.uid),
-                      builder: (context, snapshot) {
-                        // 값이 있으면 docs 리스트, 없으면 [] (NULL 리스트) 형태로 값을 반환.
-                        final documents = snapshot.data?.docs ?? [];
+          body: Column(
+            children: [
+              Expanded(
+                child: FutureBuilder<QuerySnapshot>(
+                    // CRUD의 Read
+                    future: lottoservice.read(user.uid),
+                    builder: (context, snapshot) {
+                      // 값이 있으면 docs 리스트, 없으면 [] (NULL 리스트) 형태로 값을 반환.
+                      final documents = snapshot.data?.docs ?? [];
 
-                        // 버킷 리스트가 비었을 경우
-                        if (documents.isEmpty) {
-                          return const Center(
-                            child: Text("로또 번호를 등록해 주세요!"),
-                          );
-                        }
-                        return ListView.builder(
-                          itemCount: documents.length,
-                          itemBuilder: (context, index) {
-                            final docs = documents[index];
-                            List<dynamic> lottoGames = docs.get("lottogames");
-                            String json = _setLottoNum(lottoGames);
-
-                            return ListTile(
-                              title: LottoBallWidget(data: jsonDecode(json)),
-                              // 삭제 아이콘 버튼
-                              trailing: IconButton(
-                                icon: const Icon(CupertinoIcons.delete),
-                                onPressed: () {
-                                  // 삭제 버튼 클릭시
-                                  // CRUD에서 Delete
-                                  lottoservice.delete(docs.id);
-                                },
-                              ),
-                              onTap: () {
-                                print("리스트 클릭!");
-                              },
-                            );
-                          },
+                      // 버킷 리스트가 비었을 경우
+                      if (documents.isEmpty) {
+                        return const Center(
+                          child: Text("로또 번호를 등록해 주세요!"),
                         );
-                      }),
-                ),
-              ],
-            ),
+                      }
+                      return ListView.builder(
+                        itemCount: documents.length,
+                        itemBuilder: (context, index) {
+                          final docs = documents[index];
+                          List<dynamic> lottoGames = docs.get("lottogames");
+                          String json = _setLottoNum(lottoGames);
+
+                          return ListTile(
+                            title: LottoBallWidget(data: jsonDecode(json)),
+                            // 삭제 아이콘 버튼
+                            trailing: IconButton(
+                              icon: const Icon(CupertinoIcons.delete),
+                              onPressed: () {
+                                // 삭제 버튼 클릭시
+                                // CRUD에서 Delete
+                                lottoservice.delete(docs.id);
+                              },
+                            ),
+                            onTap: () {
+                              print("리스트 클릭!");
+                            },
+                          );
+                        },
+                      );
+                    }),
+              ),
+            ],
           ),
         );
       }),

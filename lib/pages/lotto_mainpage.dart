@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lotto/pages/lotto_onboardingpage.dart';
+import 'package:flutter/services.dart';
+import 'package:lotto/pages/lotto_signuppage.dart';
 import 'package:provider/provider.dart';
 import '../widgets/auth_service.dart';
 import 'lotto_mainpage_home.dart';
@@ -59,7 +60,7 @@ class _LottoMainPage extends State<LottoMainPage> {
                       color: Colors.green,
                     ),
                   ),
-                  TextSpan(
+                  const TextSpan(
                     text: " ",
                     style: TextStyle(fontSize: 5),
                   ),
@@ -113,7 +114,7 @@ class _LottoMainPage extends State<LottoMainPage> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LottoOnboardingPage(),
+                                builder: (context) => const LottoSignUpPage(),
                               ),
                             );
                           },
@@ -128,13 +129,16 @@ class _LottoMainPage extends State<LottoMainPage> {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: currentIndex,
-        children: [
-          LottoMainPageHome(),
-          LottoMainPageLottolist(),
-          LottoMainPageMyPage(),
-        ],
+      body: WillPopScope(
+        onWillPop: () => willPopScope(),
+        child: IndexedStack(
+          index: currentIndex,
+          children: [
+            LottoMainPageHome(),
+            LottoMainPageLottolist(),
+            LottoMainPageMyPage(),
+          ],
+        ),
       ),
 
       bottomNavigationBar: BottomNavigationBar(
@@ -252,6 +256,35 @@ class _LottoMainPage extends State<LottoMainPage> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<bool> willPopScope() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+          title: const Text("앱을 종료하시겠습니까?"),
+          actions: <Widget>[
+            ElevatedButton(
+                onPressed: () {
+                  // true가 전달되어 앱이 종료 됨.
+                  SystemNavigator.pop();
+                },
+                child: Text("예")),
+            ElevatedButton(
+                onPressed: () {
+                  // false가 전달되어 앱이 종료 되지 않음
+                  Navigator.pop(context, false);
+                },
+                child: Text("아니오")),
+          ],
+        );
+      },
     );
   }
 }
