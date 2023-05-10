@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +14,10 @@ class LottoSignInPage extends StatefulWidget {
 class _LottoSignInPageState extends State<LottoSignInPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordCheckController = TextEditingController();
 
-  final String eventImg = 'assets/images/advertise_image.png';
+  String idCheckMessage = '사용 가능한 아이디입니다.';
+  bool idChk = true;
 
   @override
   Widget build(BuildContext context) {
@@ -33,114 +33,182 @@ class _LottoSignInPageState extends State<LottoSignInPage> {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+            padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
-                  child: Image.asset(
-                    'assets/images/icon.jpg',
+                RichText(
+                  text: const TextSpan(
+                    style: TextStyle(fontSize: 24, color: Colors.black),
+                    children: [
+                      TextSpan(
+                          text: "아이디와 비밀번호",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: "만으로"),
+                      TextSpan(text: "\n우린 "),
+                      TextSpan(
+                          text: "친구",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: "가 될 수 있어요!"),
+                    ],
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: TextField(
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: '아이디'),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: TextField(
-                    obscureText: true,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    controller: passwordController,
-                    decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: '비밀번호'),
+                const SizedBox(height: 32),
+                RichText(
+                  text: const TextSpan(
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                    children: [
+                      TextSpan(text: "아이디"),
+                      TextSpan(text: "*", style: TextStyle(color: Colors.red)),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 24),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: TextField(
-                    obscureText: true,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    controller: passwordController,
-                    decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: '비밀번호 확인'),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                TextButton(
-                  onPressed: () {
-                    authservice.signUp(
-                      email: emailController.text,
-                      password: passwordController.text,
-                      onSuccess: () {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text("회원가입 성공")));
-                      },
-                      onError: (error) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(error)));
-                      },
-                    );
-                  },
-                  child: Text('회원 가입', style: TextStyle(fontSize: 12)),
-                ),
-                SizedBox(
-                  width: 400,
-                  child: TextField(
-                    controller: passwordController,
-                    maxLength:
-                        10, // 최대 텍스트 필드 크기, 이것을 지정함으로써 counter가 자동 생성 (counterStyle:)
-                    obscureText: true,
-                    enabled: true,
-                    keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
+                const SizedBox(height: 6),
+                TextField(
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  controller: emailController,
+                  decoration: const InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Colors.greenAccent,
+                          color: Colors.green,
                           width: 1.0,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Colors.red,
+                          color: Colors.grey,
                           width: 1.0,
                         ),
                       ),
                       prefixIcon: Icon(Icons.perm_identity),
-                      labelText: 'password',
-                      helperText: '비밀번호는 10자 이상',
-                      counterStyle: TextStyle(
-                        fontSize: 15,
+                      border: InputBorder.none,
+                      labelText: '아이디',
+                      suffixText: '중복체크'),
+                ),
+                const SizedBox(height: 24),
+                RichText(
+                  text: const TextSpan(
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                    children: [
+                      TextSpan(text: "비밀번호"),
+                      TextSpan(text: "*", style: TextStyle(color: Colors.red)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  obscureText: true,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.green,
+                          width: 1.0,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                      ),
+                      prefixIcon: Icon(Icons.key),
+                      border: InputBorder.none,
+                      labelText: '비밀번호'),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '비밀번호는 영문 대소문자, 숫자를 혼합하여 8~16자로 입력해주세요.',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const SizedBox(height: 18),
+                TextField(
+                  obscureText: true,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  controller: passwordCheckController,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.greenAccent,
+                        width: 1.0,
                       ),
                     ),
-                    onChanged: (text) {},
-                    onSubmitted: (text) {
-                      setState(() {
-                        print(text);
-                      });
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                    prefixIcon: Icon(Icons.key),
+                    hintText: '비밀번호 확인',
+                    labelText: '비밀번호 확인',
+                  ),
+                  onChanged: (text) {},
+                  onSubmitted: (text) {
+                    setState(() {
+                      print(text);
+                    });
+                  },
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  "닉네임",
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 6),
+                TextField(
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.green,
+                          width: 1.0,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                      ),
+                      prefixIcon: Icon(Icons.abc),
+                      border: InputBorder.none,
+                      labelText: '닉네임',
+                      suffixText: '중복체크'),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      authservice.signUp(
+                        email: emailController.text,
+                        password: passwordController.text,
+                        onSuccess: () {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("회원가입 성공")));
+                        },
+                        onError: (error) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text(error)));
+                        },
+                      );
                     },
+                    child: Text(
+                      '회원 가입',
+                      style: TextStyle(fontSize: 12),
+                    ),
                   ),
                 ),
               ],

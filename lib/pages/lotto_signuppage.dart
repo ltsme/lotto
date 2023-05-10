@@ -48,7 +48,6 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                     ),
 
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey),
                       ),
@@ -57,6 +56,7 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                             const TextStyle(fontSize: 12, color: Colors.grey),
                         controller: emailController,
                         decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.perm_identity),
                             border: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             hintText: '아이디'),
@@ -64,7 +64,6 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                     ),
                     SizedBox(height: 16),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey),
                       ),
@@ -74,6 +73,7 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                             const TextStyle(fontSize: 12, color: Colors.grey),
                         controller: passwordController,
                         decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.key),
                             border: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             hintText: '비밀번호'),
@@ -172,6 +172,27 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: Image.asset(
+                            'assets/images/icon_lottery.png',
+                          ),
+                          iconSize: 50,
+                        ),
+                        const SizedBox(height: 12),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Image.asset(
+                            'assets/images/icon_lottery.png',
+                          ),
+                          iconSize: 50,
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
