@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:lotto/pages/lotto_getnumberpage.dart';
+import 'package:lotto/pages/qrscanresultpage.dart';
 import 'package:lotto/widgets/LoadingPage.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
 import 'package:lotto/widgets/qrscan.dart';
@@ -77,7 +79,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
       'https://m.search.naver.com/search.naver?sm=mtp_hty.top&where=m&query=%EB%84%A4%EC%9D%B4%EB%B2%84+%EC%9A%B4%EC%84%B8';
 
   /// 배경 이미지 URL
-  final String titleImg = "assets/images/lotto_title.png";
+  final String titleicon = "assets/images/lotto_mainicon.png";
 
   final textController = TextEditingController();
   final dialogController = TextEditingController(text: '');
@@ -88,7 +90,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
     return thisRoundlottoData == null
         ? const LoadingPage()
         : Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.blue[100],
             // 뒤로가기 종료 기능을 위한 WillPopScope 위젯
             body: Stack(
               // 우측 하단에 플로팅 '로또 번호 뽑기' 아이콘 띄우기 위해 Stack으로 구현
@@ -108,28 +110,30 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                         collapseMode: CollapseMode.pin,
                         background: Stack(
                           children: [
-                            // 백 그라운드 이미지
-                            Positioned.fill(
-                              bottom: 40,
-                              child: Image.asset(
-                                titleImg,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
+                            // // 백 그라운드 이미지
+                            // Positioned.fill(
+                            //   bottom: 40,
+                            //   child: Image.asset(
+                            //     titleicon,
+                            //     fit: BoxFit.contain,
+                            //   ),
+                            // ),
                             Positioned(
                               left: 24,
                               right: 24,
                               top: 48,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
                                     "로또 앱과 함께 \n1등까지! 🍀",
                                     style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
+                                  Image.asset(titleicon, fit: BoxFit.contain),
                                 ],
                               ),
                             ),
@@ -141,53 +145,31 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                       bottom: PreferredSize(
                         preferredSize: Size.fromHeight(52), // 영역의 높이
                         child: Container(
-                          height: 52,
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                // Row(
-                                //   children: [
-                                //     const Icon(
-                                //       Icons.arrow_circle_up_sharp,
-                                //       size: 24.0,
-                                //       color: Colors.black,
-                                //     ),
-                                //     TextButton(
-                                //       onPressed: () {},
-                                //       child: const Text(
-                                //         '위로 돌아가기',
-                                //         style: TextStyle(
-                                //           fontSize: 18,
-                                //           color: Colors.black,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      "이번 추첨일 까지 / ",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      // 삼항 연산자를 이용해 당일인 경우 0, 나머지는 차이만큼 표시
-                                      "- ${dDayDate.inDays == 0 ? "0" : dDayDate.inDays}일",
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.red),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                          color: Colors.red[300], // test 용
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text(
+                                    "이번 추첨일 까지 / ",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    // 삼항 연산자를 이용해 당일인 경우 0, 나머지는 차이만큼 표시
+                                    "- ${dDayDate.inDays == 0 ? "0" : dDayDate.inDays}일",
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -202,17 +184,18 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // 광고 그림 위젯
+                            //광고 그림 위젯, 팝업으로 띄울 것 [다시보지 않기, 닫기]
                             // Padding(
                             //   padding: const EdgeInsets.symmetric(
                             //       horizontal: 20, vertical: 12),
                             //   child: ClipRRect(
                             //     borderRadius: BorderRadius.circular(8),
-                            //     child: Image.asset('assets/images/advertise_image.png'),
+                            //     child: Image.asset(
+                            //         'assets/images/advertise_image.png'),
                             //   ),
                             // ),
-
-                            Padding(
+                            Container(
+                              color: Colors.green, // test
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 16),
                               child: Row(
@@ -220,7 +203,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   // 기능 1. QR 코드 스캔
-
                                   Column(
                                     children: [
                                       IconButton(
@@ -260,7 +242,16 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                   Column(
                                     children: [
                                       IconButton(
-                                        onPressed: () => _launchURL(naverUrl),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  QrScanResultPage(
+                                                      url: naverUrl),
+                                            ),
+                                          );
+                                        },
                                         icon: Image.asset(
                                             'assets/images/icon_clover.png'),
                                         iconSize: 80,
@@ -432,7 +423,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   void _winningNumDialog() {
     showDialog(
       context: context,
-      barrierDismissible: true, //  빈 곳을 눌렀을 때, 창이 닫히는 지
+      barrierDismissible: false, //  빈 곳을 눌렀을 때, 창이 닫히는 지
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -496,6 +487,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
               child: const Text("취소"),
               onPressed: () {
                 Navigator.pop(context);
+                textController.text = '';
                 dialogController.text = '';
               },
             ),
@@ -511,6 +503,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                   _showWinningNum(
                     int.parse(textController.text),
                   );
+                  textController.text = '';
                   dialogController.text = '';
                 }
               },
@@ -527,6 +520,9 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
         'http://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=$RoundNum');
     http.Response response = await http.get(url);
     var lottoData = jsonDecode(response.body);
+
+    // 천단위 출력을 위한 포맷
+    var f = NumberFormat('###,###,###,###');
 
     if (response.statusCode == 200) {
       showDialog(
@@ -546,12 +542,13 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                     Text(
                       "${lottoData['drwNo']}회",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.red, fontSize: 24),
+                      style: TextStyle(color: Colors.red, fontSize: 32),
                     ),
                     SizedBox(width: 10),
-                    Text("당첨결과", style: TextStyle(fontSize: 24)),
+                    Text("당첨결과", style: TextStyle(fontSize: 32)),
                   ],
                 ),
+                SizedBox(height: 4),
                 Text(
                   "(${lottoData['drwNoDate']} 추첨)",
                   style: TextStyle(color: Colors.grey, fontSize: 16),
@@ -566,16 +563,18 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("총 상금액 : ", style: TextStyle(fontSize: 18)),
-                    Text("${lottoData['totSellamnt']} 원",
-                        style: TextStyle(fontSize: 18)),
+                    Text("${f.format(lottoData['totSellamnt'])} 원",
+                        style:
+                            TextStyle(fontSize: 18, color: Colors.grey[600])),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("1등 상금액 : ", style: TextStyle(fontSize: 18)),
-                    Text("${lottoData['firstWinamnt']} 원",
-                        style: TextStyle(fontSize: 18)),
+                    Text("${f.format(lottoData['firstWinamnt'])} 원",
+                        style:
+                            TextStyle(fontSize: 18, color: Colors.grey[600])),
                   ],
                 ),
                 Row(
@@ -583,15 +582,12 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                   children: [
                     Text("1등 당첨자 : ", style: TextStyle(fontSize: 18)),
                     Text("${lottoData['firstPrzwnerCo']} 명",
-                        style: TextStyle(fontSize: 18)),
+                        style:
+                            TextStyle(fontSize: 18, color: Colors.grey[600])),
                   ],
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  padding: EdgeInsets.all(4),
-                  color: Colors.red,
-                  child: _setWinningNum(lottoData),
-                )
+                _setWinningNum(lottoData),
               ],
             ),
           );

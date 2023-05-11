@@ -305,24 +305,33 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
                 User? user = authService.currentUser()!;
                 LottoService lottoService = context.read<LottoService>();
 
-                //if(){              }else{                }
                 lottoService.create(user.uid, lottogames);
-                // var array = [];
-                // var readRes =
-                //     await storage.read(key: 'randomLotto');
 
-                // if (readRes == null) {
-                //   array.add(jsonDecode(json));
-                // } else {
-                //   array = jsonDecode(readRes);
-                //   array.add(jsonDecode(json));
-                // }
-
-                // await storage.write(
-                //     key: 'randomLotto', value: jsonEncode(array));
-
-                // Get.back();
                 Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      insetPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      title: const Text(
+                        '저장 되었습니다.',
+                        style: TextStyle(color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                      actions: [
+                        TextButton(
+                          child: const Text("확인"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             ),
           ],
