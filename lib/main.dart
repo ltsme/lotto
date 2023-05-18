@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lotto/pages/lotto_mainpage.dart';
-import 'package:lotto/pages/lotto_onboardingpage.dart';
+import 'package:lotto/pages/login/lotto_onboardingpage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lotto/widgets/auth_service.dart';

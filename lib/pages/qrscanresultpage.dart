@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lotto/pages/lotto_onboardingpage.dart';
+import 'package:lotto/pages/login/lotto_onboardingpage.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 // 로그인 상태가 변할 시, 화면 초기화를 위해 ChangeNotifier
 class AuthService extends ChangeNotifier {
+  final validNumbers = RegExp(r'(\d+)');
+  final validAlphabet = RegExp(r'[a-zA-Z]');
+
   // firebase_auth의 User클래스
   User? currentUser() {
     // 현재 로그인 된 유저의 객체 (User) 반환(로그인 되지 않은 경우 null 반환)
@@ -12,6 +15,7 @@ class AuthService extends ChangeNotifier {
   void signUp({
     required String email, // 이메일
     required String password, // 비밀번호
+    required String passwordcheck,
     required Function() onSuccess, // 가입 성공시 호출되는 함수
     required Function(String err) onError, // 에러 발생시 호출되는 함수
   }) async {
@@ -22,6 +26,17 @@ class AuthService extends ChangeNotifier {
     } else if (password.isEmpty) {
       onError("비밀번호를 입력해 주세요");
       return;
+    } else if (password != passwordcheck) {
+      onError("비밀번호가 동일하지 않아요");
+    } else if (password.length > 16) {
+      // 비밀번호 유효성 검사 1 (16자 이하)
+      onError("비밀번호는 16자 이하로 입력해 주세요");
+    } else if (!validNumbers.hasMatch(password)) {
+      // 비밀번호 유효성 검사 2 (숫자 포함)
+      onError("비밀번호는 숫자를 포함해 주세요");
+    } else if (!validAlphabet.hasMatch(password)) {
+      // 비밀번호 유효성 검사 3 (문자 포함)
+      onError("비밀번호는 문자를 포함해 주세요");
     }
 
     try {
@@ -29,6 +44,7 @@ class AuthService extends ChangeNotifier {
         email: email,
         password: password,
       );
+      onSuccess();
     } on FirebaseAuthException catch (e) {
       // Firebase auth 에러; email 형식을 지키지 않았거나, 등
       // onError(e.message!);

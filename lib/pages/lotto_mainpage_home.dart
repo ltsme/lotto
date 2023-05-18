@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,10 +16,10 @@ import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // Lotto 앱 메인 컬러
-Color appMainColor = Colors.blue.shade400;
+Color appMainColor = Colors.blue.shade300;
 
 //포인트 색상
-Color accentColor = const Color.fromARGB(255, 199, 176, 121);
+Color accentColor = Colors.green.shade300;
 
 // 오늘 날짜 nowDate
 DateTime nowDate = DateTime.now();
@@ -34,7 +35,11 @@ var saterdayDate = DateTime(
 var kakaoMapKey = '953fcd9b73a5574241b4e6185312b34d';
 
 // Lotto API 데이터
-int thisRoundDrwNo = 1061; // 임시로 상수 사용, 이후 계산 가능하게 업데이트
+final difDays = DateTime.now()
+    .difference(DateTime(2023, 01, 07))
+    .inDays; // 1049회, 2023-01-07 기준
+final difWeek = (difDays / 7).floor();
+final int thisRoundDrwNo = 1049 + difWeek; // 임시로 상수 사용, 이후 계산 가능하게 업데이트
 var thisRoundlottoData;
 
 double lat = 0.0;
@@ -90,7 +95,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
     return thisRoundlottoData == null
         ? const LoadingPage()
         : Scaffold(
-            backgroundColor: Colors.blue[100],
             // 뒤로가기 종료 기능을 위한 WillPopScope 위젯
             body: Stack(
               // 우측 하단에 플로팅 '로또 번호 뽑기' 아이콘 띄우기 위해 Stack으로 구현
@@ -110,14 +114,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                         collapseMode: CollapseMode.pin,
                         background: Stack(
                           children: [
-                            // // 백 그라운드 이미지
-                            // Positioned.fill(
-                            //   bottom: 40,
-                            //   child: Image.asset(
-                            //     titleicon,
-                            //     fit: BoxFit.contain,
-                            //   ),
-                            // ),
+                            // 백 그라운드 이미지
                             Positioned(
                               left: 24,
                               right: 24,
@@ -133,7 +130,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Image.asset(titleicon, fit: BoxFit.contain),
+                                  //Image.asset(titleicon, fit: BoxFit.contain),
                                 ],
                               ),
                             ),
@@ -143,10 +140,9 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                       // ---스크롤 시 남아있는 영역, bottom
                       // SliverAppBar의 bottom은 PrefereedSize 위젯으로 시작해야만 한다.
                       bottom: PreferredSize(
-                        preferredSize: Size.fromHeight(52), // 영역의 높이
+                        preferredSize: Size.fromHeight(40), // 영역의 높이
                         child: Container(
-                          color: Colors.red[300], // test 용
-                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          padding: EdgeInsets.symmetric(horizontal: 16),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -195,7 +191,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                             //   ),
                             // ),
                             Container(
-                              color: Colors.green, // test
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 16),
                               child: Row(

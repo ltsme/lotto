@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:lotto/pages/lotto_signuppage.dart';
+import 'package:lotto/pages/login/lotto_loginpage.dart';
 
 class LottoOnboardingPage extends StatefulWidget {
   const LottoOnboardingPage({super.key});
@@ -38,7 +38,7 @@ class _LottoOnboardingPageState extends State<LottoOnboardingPage> {
                 ),
                 bodyTextStyle: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: 22,
                 ),
               ),
             ),
@@ -59,7 +59,7 @@ class _LottoOnboardingPageState extends State<LottoOnboardingPage> {
                 ),
                 bodyTextStyle: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: 22,
                 ),
               ),
             ),
@@ -71,26 +71,6 @@ class _LottoOnboardingPageState extends State<LottoOnboardingPage> {
                 padding: const EdgeInsets.all(32),
                 child: Image.asset('assets/images/icon.jpg'),
               ),
-              footer: Container(
-                padding: const EdgeInsets.symmetric(vertical: 50),
-                width: 200,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LottoSignUpPage(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green,
-                    shape: const StadiumBorder(),
-                  ),
-                  child: const Text("시작하기"),
-                ),
-              ),
               decoration: const PageDecoration(
                 boxDecoration: BoxDecoration(color: Colors.white),
                 titleTextStyle: TextStyle(
@@ -100,13 +80,22 @@ class _LottoOnboardingPageState extends State<LottoOnboardingPage> {
                 ),
                 bodyTextStyle: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: 22,
                 ),
               ),
             ),
           ],
-          showDoneButton: false,
-          showNextButton: false,
+          done: const Text("시작하기"),
+          onDone: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const LottoLoginPage()),
+            );
+          },
+          next: const Icon(Icons.arrow_forward),
+          back: const Icon(Icons.arrow_back),
+          showBackButton: true,
+          showDoneButton: true,
+          showNextButton: true,
           dotsDecorator: const DotsDecorator(activeColor: Colors.black),
         ),
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lotto/pages/lotto_signuppage.dart';
+import 'package:lotto/pages/login/lotto_loginpage.dart';
 import 'package:provider/provider.dart';
 import '../widgets/auth_service.dart';
 import 'lotto_mainpage_home.dart';
@@ -114,7 +114,7 @@ class _LottoMainPage extends State<LottoMainPage> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const LottoSignUpPage(),
+                                builder: (context) => const LottoLoginPage(),
                               ),
                             );
                           },
