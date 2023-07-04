@@ -107,7 +107,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                       pinned: true, // 스크롤 시 bottom 영역을 고정할 지
                       snap: false, // 중간에 멈출 때 자동으로 AppBar를 펼쳐서 보여줄지
                       floating: true, // AppBar를 화면에 띄울지, 아니면 컬럼처럼 최 상단에 놓을 지
-                      expandedHeight: 200,
+                      expandedHeight: 150,
 
                       // ---스크롤 시 사라질 영역, flexibleSpace
                       flexibleSpace: FlexibleSpaceBar(
@@ -118,13 +118,13 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                             Positioned(
                               left: 24,
                               right: 24,
-                              top: 48,
+                              top: 36,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
-                                    "로또 앱과 함께 \n1등까지! 🍀",
+                                    "로또 앱과 함께 \n 1등까지! 🍀",
                                     style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
@@ -142,7 +142,8 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                       bottom: PreferredSize(
                         preferredSize: Size.fromHeight(40), // 영역의 높이
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
