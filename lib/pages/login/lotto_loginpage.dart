@@ -6,6 +6,7 @@ import 'package:lotto/pages/login/lotto_pwfindingpage.dart';
 import 'package:lotto/pages/login/lotto_signuppage.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:provider/provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LottoLoginPage extends StatefulWidget {
   const LottoLoginPage({super.key});
@@ -17,6 +18,7 @@ class LottoLoginPage extends StatefulWidget {
 class _LottoLoginPageState extends State<LottoLoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   @override
   Widget build(BuildContext context) {
@@ -84,16 +86,21 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                             email: emailController.text,
                             password: passwordController.text,
                             onSuccess: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("로그인 성공")),
-                              );
+                              FirebaseAuth.instance
+                                  .authStateChanges()
+                                  .listen((event) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("로그인 성공")),
+                                );
 
-                              // 로그인 성공 시 HomePage로 이동하면서 uid를 보내줌
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => LottoMainPage()),
-                              );
+                                // 로그인 성공 시 HomePage로 이동하면서 uid를 보내줌
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          LottoMainPage(uid: event!.uid)),
+                                );
+                              });
                             },
                             onError: (error) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -171,21 +178,29 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                           style: ElevatedButton.styleFrom(
                             shape: StadiumBorder(),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            //googleAuthSignIn();
+
+                            googleAuthSignIn();
+
+                            FirebaseAuth.instance
+                                .authStateChanges()
+                                .listen((event) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("로그인 성공")),
+                              );
+
+                              // 로그인 성공 시 HomePage로 이동하면서 uid를 보내줌
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        LottoMainPage(uid: event!.uid)),
+                              );
+                            });
+                          },
                           child: const Text(
                             'Google로 계속하기',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: StadiumBorder(),
-                          ),
-                          onPressed: () {},
-                          child: const Text(
-                            'Kakao로 계속하기',
                           ),
                         ),
                       ),
@@ -227,5 +242,20 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
         );
       },
     );
+  }
+
+  Future<UserCredential> googleAuthSignIn() async {
+    //구글 Sign in 플로우 오픈
+    final GoogleSignInAccount? googleUser = await GoogleSignIn()?.signIn();
+
+    //구글 인증 정보 읽어오기
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    //읽어온 인증정보로 파이어베이스 인증 로그인!
+    final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+    //파이어 베이스 Signin하고 결과(userCredential) 리턴햇!
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

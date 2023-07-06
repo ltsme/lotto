@@ -1,28 +1,31 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lotto/pages/lotto_mainpage.dart';
-import 'package:lotto/pages/login/lotto_signuppage.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 
-class LottoPwFindingPage extends StatefulWidget {
-  const LottoPwFindingPage({super.key});
+// Lotto 앱 메인 컬러
+Color appMainColor = Colors.blue.shade300;
+
+class LottoSignUpPageNick extends StatefulWidget {
+  const LottoSignUpPageNick({super.key});
 
   @override
-  State<LottoPwFindingPage> createState() => _LottoPwFindingPageState();
+  State<LottoSignUpPageNick> createState() => _LottoSignUpPageNickState();
 }
 
-class _LottoPwFindingPageState extends State<LottoPwFindingPage> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController dialogController = TextEditingController(text: '');
+class _LottoSignUpPageNickState extends State<LottoSignUpPageNick> {
+  TextEditingController nicknameController = TextEditingController();
+  List nicknames = ['네잎 클로버, 행운, 럭키, 대박, 돼지 꿈 ,두근두근, 콩닥콩닥'];
+  String nickname = '';
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthService>(builder: (context, authservice, child) {
       User? user = authservice.currentUser();
-
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -101,26 +104,29 @@ class _LottoPwFindingPageState extends State<LottoPwFindingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '비밀번호 재 설정',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 24),
                 RichText(
                   text: const TextSpan(
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 24, color: Colors.black),
                     children: [
-                      TextSpan(text: "이메일"),
+                      TextSpan(
+                          text: "닉네임",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: "을 입력해 주세요!"),
                     ],
                   ),
+                ),
+                const SizedBox(height: 32),
+                const Text(
+                  "닉네임",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 6),
                 TextField(
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  controller: emailController,
+                  controller: nicknameController,
                   decoration: const InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -134,37 +140,36 @@ class _LottoPwFindingPageState extends State<LottoPwFindingPage> {
                         width: 1.0,
                       ),
                     ),
-                    prefixIcon: Icon(Icons.perm_identity),
+                    prefixIcon: Icon(Icons.abc),
                     border: InputBorder.none,
-                    labelText: '이메일',
+                    labelText: '닉네임',
                   ),
                 ),
-                TextField(
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(color: Colors.amber),
-                  controller: dialogController,
-                  enabled: false,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                  ),
+                const Text(
+                  "닉네임은 5자 이하로 입력해 주세요.\n 닉네임을 입력하지 않을 경우 무작위 닉네임이 부여 됩니다🤣",
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  width: double.maxFinite,
+                  width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () async {
-                      if (emailController.text.isEmpty) {
-                        setState(() {
-                          dialogController.text = '이메일을 입력해 주세요';
-                        });
+                    onPressed: () {
+                      if (nicknameController.text == null) {
+                        nicknames.shuffle();
+                        nickname = nicknames.first;
+                        print("랜덤 Test : nickname = $nickname");
                       } else {
-                        await FirebaseAuth.instance.setLanguageCode("kr");
-                        await FirebaseAuth.instance.sendPasswordResetEmail(
-                            email: emailController.text);
-                        pwDialog();
+                        nickname = nicknameController.text;
+                        print("입력한 Test nickname = $nickname");
                       }
+                      // Firebase Store Nickname 등록과정
+                      Navigator.pop(context);
+                      signupDialog();
                     },
-                    child: const Text(
-                      '찾기',
+                    child: Text(
+                      '회원 가입',
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
@@ -177,7 +182,36 @@ class _LottoPwFindingPageState extends State<LottoPwFindingPage> {
     });
   }
 
-  void pwDialog() {
+  Future<bool> willPopScope() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+          title: const Text("앱을 종료하시겠습니까?"),
+          actions: <Widget>[
+            ElevatedButton(
+                onPressed: () {
+                  // true가 전달되어 앱이 종료 됨.
+                  SystemNavigator.pop();
+                },
+                child: Text("예")),
+            ElevatedButton(
+                onPressed: () {
+                  // false가 전달되어 앱이 종료 되지 않음
+                  Navigator.pop(context, false);
+                },
+                child: Text("아니오")),
+          ],
+        );
+      },
+    );
+  }
+
+  void signupDialog() {
     showDialog(
         context: context,
         //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
@@ -187,14 +221,12 @@ class _LottoPwFindingPageState extends State<LottoPwFindingPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
             content: const Text(
-              "비밀번호 재 설정 이메일이\n전송되었습니다!😜",
+              "회원가입이 완료되었습니다!\n로그인 해 주세요",
             ),
             actions: [
               TextButton(
                 child: const Text("확인"),
                 onPressed: () {
-                  emailController.text = '';
-                  dialogController.text = '';
                   Navigator.pop(context);
                 },
               ),

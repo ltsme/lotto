@@ -35,7 +35,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: GoogleFonts.getTextTheme('Jua')),
-      home: user == null ? const LottoOnboardingPage() : const LottoMainPage(),
+      home: user == null
+          ? const LottoOnboardingPage()
+          : LottoMainPage(
+              uid: user.uid,
+            ),
     );
   }
 }

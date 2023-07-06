@@ -8,7 +8,8 @@ import 'lotto_mainpage_mypage.dart';
 import 'lotto_mainpage_lottolist.dart';
 
 class LottoMainPage extends StatefulWidget {
-  const LottoMainPage({Key? key}) : super(key: key);
+  String uid = '';
+  LottoMainPage({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<LottoMainPage> createState() => _LottoMainPage();
@@ -195,7 +196,7 @@ class _LottoMainPage extends State<LottoMainPage> {
 
                     /// 닉네임
                     Text(
-                      "닉네임",
+                      "닉네임 : ${widget.uid}",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

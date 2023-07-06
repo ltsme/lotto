@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:provider/provider.dart';
 
+import 'lotto_signuppage_nick.dart';
+
 // Lotto 앱 메인 컬러
 Color appMainColor = Colors.blue.shade300;
 
@@ -236,8 +238,12 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                         password: passwordController.text,
                         passwordcheck: passwordCheckController.text,
                         onSuccess: () {
-                          Navigator.pop(context);
-                          signupDialog();
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const LottoSignUpPageNick(),
+                              ));
                         },
                         onError: (error) {
                           ScaffoldMessenger.of(context)
@@ -246,7 +252,7 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                       );
                     },
                     child: Text(
-                      '회원 가입',
+                      '다음',
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
@@ -286,29 +292,5 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
         );
       },
     );
-  }
-
-  void signupDialog() {
-    showDialog(
-        context: context,
-        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            content: const Text(
-              "회원가입이 완료되었습니다!\n로그인 해 주세요",
-            ),
-            actions: [
-              TextButton(
-                child: const Text("확인"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        });
   }
 }

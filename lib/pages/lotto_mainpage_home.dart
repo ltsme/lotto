@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:lotto/pages/KakaoMapScreen_copy.dart';
 import 'package:lotto/pages/lotto_getnumberpage.dart';
 import 'package:lotto/pages/qrscanresultpage.dart';
 import 'package:lotto/widgets/LoadingPage.dart';
@@ -14,6 +15,8 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import 'KakaoMapScreen.dart';
 
 // Lotto 앱 메인 컬러
 Color appMainColor = Colors.blue.shade300;
@@ -42,8 +45,11 @@ final difWeek = (difDays / 7).floor();
 final int thisRoundDrwNo = 1049 + difWeek; // 임시로 상수 사용, 이후 계산 가능하게 업데이트
 var thisRoundlottoData;
 
-double lat = 0.0;
-double lon = 0.0;
+late double posLat = 0.0;
+late double posLon = 0.0;
+
+bool mapPermission = false;
+String testPermissiion = '';
 
 class LottoMainPageHome extends StatefulWidget {
   const LottoMainPageHome({super.key});
@@ -53,8 +59,6 @@ class LottoMainPageHome extends StatefulWidget {
 }
 
 class _LottoMainPageHome extends State<LottoMainPageHome> {
-  late WebViewController _mapController;
-
   // 오늘 부터 토요일 까지의 D-day
   var dDayDate = saterdayDate.difference(nowDate);
 
@@ -72,14 +76,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   // 로또 번호 리스트
   List<int> lottoNumList = const [];
 
-  // build 전에 initState에서 값을 가져온다.
-  @override
-  void initState() {
-    getLottoData(thisRoundDrwNo);
-    _getCurrentLocation();
-    super.initState();
-  }
-
   String naverUrl =
       'https://m.search.naver.com/search.naver?sm=mtp_hty.top&where=m&query=%EB%84%A4%EC%9D%B4%EB%B2%84+%EC%9A%B4%EC%84%B8';
 
@@ -88,6 +84,35 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
 
   final textController = TextEditingController();
   final dialogController = TextEditingController(text: '');
+
+  // createState()로 State 객체가 생성 된 후 initState()가 호출
+  // 처음 한번만 호출 된다.
+  @override
+  void initState() {
+    log('initState');
+    getLottoData(thisRoundDrwNo);
+    _getLocation();
+    super.initState();
+  }
+
+  // initState() 함수가 호출된 뒤 바로 호출되는 함수.
+  // 상속 관계에서 의존하는 위젯이 변경되면 호출.
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    log('didChangeDependencies');
+    super.didChangeDependencies();
+  }
+
+  // 부모 위젯이나 데이터가 변경되어 위젯을 갱신해야 할 때 호출합니다.
+  // initState() 함수는 위젯을 초기화할 때 한 번만 호출되므로 위젯이 변경되었을 때 호출하는 didUpdateWidget() 같은 함수가 필요합니다.
+  @override
+  void didUpdateWidget(covariant LottoMainPageHome oldWidget) {
+    // TODO: implement didUpdateWidget
+    log('didUpdateWidget');
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +168,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                         preferredSize: Size.fromHeight(40), // 영역의 높이
                         child: Container(
                           padding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -162,7 +187,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                     style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.red),
+                                        color: Colors.redAccent),
                                   ),
                                 ],
                               ),
@@ -311,37 +336,57 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                             ),
 
                             // 카카오 맵 띄우기
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 12),
-                              child: Container(
-                                padding: const EdgeInsets.all(12),
-                                color: Colors.grey,
-                                child: KakaoMapView(
-                                  mapController: (controller) {
-                                    _mapController = controller;
-                                  },
-                                  width: 300,
-                                  height: 400,
-                                  kakaoMapKey: kakaoMapKey,
-                                  lat: lat,
-                                  lng: lon,
-                                  showMapTypeControl: true,
-                                  showZoomControl: true,
-                                  draggableMarker: true,
-                                  markerImageURL:
-                                      'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
-                                  onTapMarker: (message) {
-                                    //event callback when the marker is tapped
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text("Marker is Clicked"),
+                            mapPermission
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 12),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      color: Colors.grey,
+                                      child: KakaoMapView(
+                                        width: 300,
+                                        height: 400,
+                                        kakaoMapKey: kakaoMapKey,
+                                        lat: posLat,
+                                        lng: posLon,
+                                        showMapTypeControl: true,
+                                        showZoomControl: true,
+                                        draggableMarker: true,
+                                        markerImageURL:
+                                            'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
+                                        onTapMarker: (message) {
+                                          //event callback when the marker is tapped
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content:
+                                                  Text("Marker is Clicked"),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 12),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      color: Colors.grey,
+                                      child: Text('$testPermissiion'),
+                                    ),
+                                  ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  await openKakaoMap(context, 1);
+                                },
+                                child: Text('show KakaoMap')),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  await openKakaoMap(context, 2);
+                                },
+                                child: Text('show KakaoMapCopy')),
                           ],
                         ),
                       ),
@@ -597,24 +642,39 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   // ----- 메소드 -----
 
   // 현재 위 경도 구하는 메소드
-  Future<void> _getCurrentLocation() async {
+  Future<void> _getLocation() async {
     // Geolocator 패키지는 위치 정보를 가져오는 기능을 제공
-    final LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      // 권한 거부
-    } else {
-      // 권한 허용
+    LocationPermission permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.always) {
+      log("permission = always");
+      testPermissiion == 'Always';
+      mapPermission = true;
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
 
       setState(() {
-        lat = position.latitude;
-        lon = position.longitude;
+        posLat = position.latitude;
+        posLon = position.longitude;
+        log("setState Test lat = $posLat, lon = $posLon");
       });
+    } else if (permission == LocationPermission.whileInUse) {
+      log("permission = whileInUse");
+      testPermissiion == 'whileInUse';
+      mapPermission = true;
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      setState(() {
+        posLat = position.latitude;
+        posLon = position.longitude;
+        log("setState Test lat = $posLat, lon = $posLon");
+      });
+    } else {
+      mapPermission = false;
+      testPermissiion = 'denied';
     }
   }
-
-  _setLocation() {}
 
   // 회차번호를 받아 로또 데이터를 리턴하는 메소드
   getLottoData(int RoundNum) async {
@@ -648,5 +708,25 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
     await canLaunchUrlString(url) // canLaunch 대신 canLaunchUrlString을 사용하자
         ? await launch(url)
         : throw 'Could not launch $url';
+  }
+
+  Future<void> openKakaoMap(BuildContext context, int a) async {
+    if (a == 1) {
+      KakaoMapUtil util = KakaoMapUtil();
+
+      String url =
+          await util.getMapScreenURL(33.450701, 126.570667, name: 'Kakao 본사');
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (_) => KakaoMapScreen(url: url)));
+    } else if (a == 2) {
+      KakaoMapUtil util = KakaoMapUtil();
+
+      String url =
+          await util.getMapScreenURL(33.450701, 126.570667, name: 'Kakao 본사');
+
+      Navigator.push(context,
+          MaterialPageRoute(builder: (_) => KakaoMapScreenCopy(url: url)));
+    }
   }
 }
