@@ -11,11 +11,12 @@ class LottoService extends ChangeNotifier {
     return lottoCollection.where('uid', isEqualTo: uid).get();
   }
 
-  void create(String uid, List<int> lottoGames) async {
+  void create(String uid, List<int> lottoGames, String date) async {
     // LottoGame Create
     await lottoCollection.add({
       'uid': uid,
       'lottogames': lottoGames,
+      'date': date,
     });
   }
 

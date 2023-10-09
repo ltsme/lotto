@@ -150,10 +150,10 @@ class _LottoMainPage extends State<LottoMainPage> {
             currentIndex = value;
           });
         },
-        selectedItemColor: appMainColor,
+        selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed, // 선택시 아이콘 움직이지 않기
-        backgroundColor: Colors.white.withOpacity(0.7),
+        backgroundColor: Colors.white,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "홈페이지"),
           BottomNavigationBarItem(
@@ -170,7 +170,7 @@ class _LottoMainPage extends State<LottoMainPage> {
             DrawerHeader(
               margin: const EdgeInsets.all(0),
               decoration: BoxDecoration(
-                color: Colors.amber,
+                color: Colors.blue.shade100,
               ),
               child: SizedBox(
                 width: double.infinity, // 가득 채우기
@@ -196,12 +196,14 @@ class _LottoMainPage extends State<LottoMainPage> {
 
                     /// 닉네임
                     Text(
-                      "닉네임 : ${widget.uid}",
+                      //"닉네임 : ${widget.uid}",
+                      "Nickname",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    SizedBox(height: 4),
 
                     /// 이메일
                     Text(
@@ -213,22 +215,6 @@ class _LottoMainPage extends State<LottoMainPage> {
                     ),
                   ],
                 ),
-              ),
-            ),
-
-            // 이벤트 배너, 특정 비율로 위젯을 보여주기
-            AspectRatio(
-              aspectRatio: 12 / 4, // 가로 : 세로 = 12 : 4
-              //스크롤을 하는데, 특정 항목이 스냅이 걸리도록 만들고 싶은 경우 PageView를 사용해요.
-              child: PageView(
-                children: [
-                  Image.network(
-                    "https://i.ibb.co/Q97cmkg/sale-event-banner1.jpg",
-                  ),
-                  Image.network(
-                    "https://i.ibb.co/GV78j68/sale-event-banner2.jpg",
-                  ),
-                ],
               ),
             ),
 
@@ -260,6 +246,7 @@ class _LottoMainPage extends State<LottoMainPage> {
     );
   }
 
+  // 뒤로가기 버튼 이벤트
   Future<bool> willPopScope() async {
     return await showDialog(
       context: context,
@@ -270,14 +257,14 @@ class _LottoMainPage extends State<LottoMainPage> {
           ),
           insetPadding: const EdgeInsets.symmetric(horizontal: 20),
           title: const Text("앱을 종료하시겠습니까?"),
-          actions: <Widget>[
-            ElevatedButton(
+          actions: [
+            TextButton(
                 onPressed: () {
                   // true가 전달되어 앱이 종료 됨.
                   SystemNavigator.pop();
                 },
                 child: Text("예")),
-            ElevatedButton(
+            TextButton(
                 onPressed: () {
                   // false가 전달되어 앱이 종료 되지 않음
                   Navigator.pop(context, false);

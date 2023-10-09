@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:lotto/pages/KakaoMapScreen_copy.dart';
-import 'package:lotto/pages/lotto_getnumberpage.dart';
+import 'package:lotto/pages/KakaoMapScreen.dart';
+import 'package:lotto/pages/lotto_gamepage.dart';
 import 'package:lotto/pages/qrscanresultpage.dart';
 import 'package:lotto/widgets/LoadingPage.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
@@ -13,13 +13,14 @@ import 'package:lotto/widgets/qrscan.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:http/http.dart' as http;
-import 'package:kakaomap_webview/kakaomap_webview.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
-import 'KakaoMapScreen.dart';
+import 'lotto_getnumberpage.dart';
 
 // Lotto 앱 메인 컬러
 Color appMainColor = Colors.blue.shade300;
+
+// Lotto 앱 메인 Background 컬러
+Color appBackColor = Colors.white;
 
 //포인트 색상
 Color accentColor = Colors.green.shade300;
@@ -34,6 +35,13 @@ var saterdayDate = DateTime(
   nowDate.day + (7 - nowDate.weekday),
 );
 
+// 이벤트 Asset
+const String eventImg = "assets/images/advertise_image.png";
+
+// 로또 번호 뽑기 그림
+const String lottoimg1 = "assets/images/icon_game.png";
+const String lottoimg2 = "assets/images/icon_picklottery.png";
+
 // Kakao Api JavaScript 키
 var kakaoMapKey = '953fcd9b73a5574241b4e6185312b34d';
 
@@ -42,7 +50,9 @@ final difDays = DateTime.now()
     .difference(DateTime(2023, 01, 07))
     .inDays; // 1049회, 2023-01-07 기준
 final difWeek = (difDays / 7).floor();
-final int thisRoundDrwNo = 1049 + difWeek; // 임시로 상수 사용, 이후 계산 가능하게 업데이트
+final int thisRoundDrwNo = 1049 + difWeek;
+
+// 추첨일 당일
 var thisRoundlottoData;
 
 late double posLat = 0.0;
@@ -76,11 +86,9 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   // 로또 번호 리스트
   List<int> lottoNumList = const [];
 
+  // 오늘의 운세 Url
   String naverUrl =
       'https://m.search.naver.com/search.naver?sm=mtp_hty.top&where=m&query=%EB%84%A4%EC%9D%B4%EB%B2%84+%EC%9A%B4%EC%84%B8';
-
-  /// 배경 이미지 URL
-  final String titleicon = "assets/images/lotto_mainicon.png";
 
   final textController = TextEditingController();
   final dialogController = TextEditingController(text: '');
@@ -100,7 +108,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     log('didChangeDependencies');
     super.didChangeDependencies();
   }
@@ -109,7 +116,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   // initState() 함수는 위젯을 초기화할 때 한 번만 호출되므로 위젯이 변경되었을 때 호출하는 didUpdateWidget() 같은 함수가 필요합니다.
   @override
   void didUpdateWidget(covariant LottoMainPageHome oldWidget) {
-    // TODO: implement didUpdateWidget
     log('didUpdateWidget');
     super.didUpdateWidget(oldWidget);
   }
@@ -120,6 +126,8 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
     return thisRoundlottoData == null
         ? const LoadingPage()
         : Scaffold(
+            // 전체 Background Color 설정
+            backgroundColor: appBackColor,
             // 뒤로가기 종료 기능을 위한 WillPopScope 위젯
             body: Stack(
               // 우측 하단에 플로팅 '로또 번호 뽑기' 아이콘 띄우기 위해 Stack으로 구현
@@ -128,41 +136,45 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                 CustomScrollView(
                   slivers: [
                     SliverAppBar(
+                      // SliverAppBar Background Color 설정
+                      backgroundColor: Colors.blue.shade100,
                       automaticallyImplyLeading: false, // App Bar에서 뒤로가기 버튼 숨기기
                       pinned: true, // 스크롤 시 bottom 영역을 고정할 지
                       snap: false, // 중간에 멈출 때 자동으로 AppBar를 펼쳐서 보여줄지
                       floating: true, // AppBar를 화면에 띄울지, 아니면 컬럼처럼 최 상단에 놓을 지
                       expandedHeight: 150,
 
-                      // ---스크롤 시 사라질 영역, flexibleSpace
-                      flexibleSpace: FlexibleSpaceBar(
-                        collapseMode: CollapseMode.pin,
-                        background: Stack(
-                          children: [
-                            // 백 그라운드 이미지
-                            Positioned(
-                              left: 24,
-                              right: 24,
-                              top: 36,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "로또 앱과 함께 \n 1등까지! 🍀",
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
+                      // --! 스크롤 시 사라질 영역, flexibleSpace
+                      flexibleSpace: Container(
+                        margin: const EdgeInsets.only(left: 8),
+                        child: FlexibleSpaceBar(
+                          collapseMode: CollapseMode.pin,
+                          background: Stack(
+                            children: [
+                              // 백 그라운드 이미지
+                              Positioned(
+                                left: 24,
+                                right: 24,
+                                top: 36,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: const [
+                                    Text(
+                                      "로또 앱과 함께 \n 1등까지! 🍀",
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  //Image.asset(titleicon, fit: BoxFit.contain),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                      // ---스크롤 시 남아있는 영역, bottom
+                      // --! 스크롤 시 남아있는 영역, bottom
                       // SliverAppBar의 bottom은 PrefereedSize 위젯으로 시작해야만 한다.
                       bottom: PreferredSize(
                         preferredSize: Size.fromHeight(40), // 영역의 높이
@@ -206,7 +218,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            //광고 그림 위젯, 팝업으로 띄울 것 [다시보지 않기, 닫기]
+                            // --! 광고 그림 위젯, 팝업으로 띄울 것 [다시보지 않기, 닫기]
                             // Padding(
                             //   padding: const EdgeInsets.symmetric(
                             //       horizontal: 20, vertical: 12),
@@ -259,7 +271,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                       const Text('당첨번호 확인')
                                     ],
                                   ),
-                                  // 기능 3. 오늘의 운세 (네이버)
+                                  // 기능 3. 오늘의 운세
                                   Column(
                                     children: [
                                       IconButton(
@@ -291,7 +303,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                               child: RichText(
                                 text: TextSpan(
                                   style: const TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 16,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                   children: [
@@ -315,12 +327,15 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                             // 이번 회차 당첨번호 위젯
                             _setWinningNum(thisRoundlottoData),
 
+                            const SizedBox(height: 16),
+
+                            // 카카오 지도 띄우기
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 32),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
                               child: RichText(
                                 text: const TextSpan(
                                   style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 16,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold),
                                   children: [
@@ -334,80 +349,62 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                 ),
                               ),
                             ),
-
-                            // 카카오 맵 띄우기
-                            mapPermission
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 12),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(12),
-                                      color: Colors.grey,
-                                      child: KakaoMapView(
-                                        width: 300,
-                                        height: 400,
-                                        kakaoMapKey: kakaoMapKey,
-                                        lat: posLat,
-                                        lng: posLon,
-                                        showMapTypeControl: true,
-                                        showZoomControl: true,
-                                        draggableMarker: true,
-                                        markerImageURL:
-                                            'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
-                                        onTapMarker: (message) {
-                                          //event callback when the marker is tapped
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content:
-                                                  Text("Marker is Clicked"),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  )
-                                : Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 12),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(12),
-                                      color: Colors.grey,
-                                      child: Text('$testPermissiion'),
-                                    ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5.0),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 1,
+                                    spreadRadius: 1,
+                                    offset: Offset(1, 1),
                                   ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    onPressed: () async {
+                                      await openKakaoMap(context);
+                                    },
+                                    icon: Image.asset(
+                                      'assets/images/icon_map.png',
+                                    ),
+                                    iconSize: 60,
+                                    tooltip: '지도 보기',
+                                  ),
+                                  const Text('주변 찾아보기')
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 32),
+                            // 광고
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.asset(eventImg),
+                            ),
                             const SizedBox(height: 16),
-                            ElevatedButton(
-                                onPressed: () async {
-                                  await openKakaoMap(context, 1);
-                                },
-                                child: Text('show KakaoMap')),
-                            ElevatedButton(
-                                onPressed: () async {
-                                  await openKakaoMap(context, 2);
-                                },
-                                child: Text('show KakaoMapCopy')),
                           ],
                         ),
                       ),
                     ),
                   ],
                 ),
+
                 // Deliverys 위젯 추가 위해 Stack 위젯으로 감싼다.
-                // 기능 4. 로또 번호 생성하기
+                // 기능 4. 로또 번호 뽑기 버튼
                 Positioned(
                   bottom: 16,
                   right: 16,
                   child: GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LottoGetNumberPage(),
-                      ),
-                    ),
+                    onTap: () {
+                      _getLottoNumDialog();
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
+                          horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
                         color: appMainColor,
                         borderRadius: BorderRadius.circular(64),
@@ -418,8 +415,8 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                             "로또 번호 뽑기",
                             style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
-                          const SizedBox(width: 10),
-                          Image.asset('assets/images/lottoball.png', width: 45),
+                          const SizedBox(width: 12),
+                          Image.asset('assets/images/lottoball.png', width: 36),
                         ],
                       ),
                     ),
@@ -555,6 +552,92 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
     );
   }
 
+  // 로또 번호 뽑는 방법 묻는 Dialog 생성 메소드
+  void _getLottoNumDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, //  빈 곳을 눌렀을 때, 창이 닫히는 지
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 8),
+          title: const SizedBox(height: 8),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // 기능 4_1 로또 게임 페이지 이동
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LottoGamePage(),
+                    ),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      lottoimg1,
+                      width: (MediaQuery.of(context).size.width) * 0.2,
+                      height: (MediaQuery.of(context).size.width) * 0.15,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("게임으로 번호 뽑기"),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 24),
+
+              // 기능 4_2 로또 번호 추출 페이지 이동
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LottoGetNumberPage(),
+                    ),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      lottoimg2,
+                      width: (MediaQuery.of(context).size.width) * 0.2,
+                      height: (MediaQuery.of(context).size.width) * 0.15,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("그냥 번호 뽑기"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: const Text(
+                "취소",
+                style: TextStyle(fontSize: 16),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // 회차 별 당첨 점보 보여주는 Dialog 생성 메소드
   void _showWinningNum(int RoundNum) async {
     var url = Uri.parse(
@@ -677,21 +760,36 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   }
 
   // 회차번호를 받아 로또 데이터를 리턴하는 메소드
-  getLottoData(int RoundNum) async {
+  getLottoData(int thisRoundDrwNo) async {
+    log("getLottoData 메소드 시작");
     var url = Uri.parse(
-        'http://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=$RoundNum');
+        'http://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=$thisRoundDrwNo');
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
-      setState(() {
-        thisRoundlottoData = jsonDecode(response.body);
-      });
+      // 당일인 경우, 데이터가 비어 있으므로 전회차로 계산
+      thisRoundlottoData = jsonDecode(response.body);
+      if (thisRoundlottoData['returnValue'] == "fail") {
+        log("전 회차 데이터 불러오기");
+        var url = Uri.parse(
+            'http://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=${thisRoundDrwNo - 1}');
+        http.Response response = await http.get(url);
+        setState(() {
+          thisRoundlottoData = jsonDecode(response.body);
+        });
+      } else {
+        log("이번 회차 데이터 그대로 쓰기");
+        setState(() {
+          thisRoundlottoData = jsonDecode(response.body);
+        });
+      }
     } else {
       throw Exception('Fail');
     }
   }
 
   _setWinningNum(var lottoData) {
+    log("setWinningNum 메소드 시작");
     var json = jsonEncode({
       'drwtNo1': lottoData['drwtNo1'],
       'drwtNo2': lottoData['drwtNo2'],
@@ -710,23 +808,15 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
         : throw 'Could not launch $url';
   }
 
-  Future<void> openKakaoMap(BuildContext context, int a) async {
-    if (a == 1) {
-      KakaoMapUtil util = KakaoMapUtil();
-
-      String url =
-          await util.getMapScreenURL(33.450701, 126.570667, name: 'Kakao 본사');
-
-      Navigator.push(
-          context, MaterialPageRoute(builder: (_) => KakaoMapScreen(url: url)));
-    } else if (a == 2) {
-      KakaoMapUtil util = KakaoMapUtil();
-
-      String url =
-          await util.getMapScreenURL(33.450701, 126.570667, name: 'Kakao 본사');
-
-      Navigator.push(context,
-          MaterialPageRoute(builder: (_) => KakaoMapScreenCopy(url: url)));
-    }
+  // 로또 판매점 찾기 지도 api
+  Future<void> openKakaoMap(BuildContext context) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => KakaoMapScreen(
+                posLat: posLat,
+                posLon: posLon,
+              )),
+    );
   }
 }

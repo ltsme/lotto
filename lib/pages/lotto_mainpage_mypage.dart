@@ -42,6 +42,8 @@ class _LottoMainPageMyPageState extends State<LottoMainPageMyPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
+              const SizedBox(height: 16),
+              Image.asset("assets/images/icon.jpg"),
             ],
           ),
         ),

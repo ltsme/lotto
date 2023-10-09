@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,13 @@ import 'package:provider/provider.dart';
 // Lotto 앱 메인 컬러
 Color appMainColor = Colors.blue.shade400;
 
+Text lottoWidgetCover = const Text(
+  '여기를 눌러보세요!',
+  style: TextStyle(color: Colors.black, fontSize: 20),
+);
+
+String dateToday = '';
+
 class LottoGetNumberPage extends StatefulWidget {
   const LottoGetNumberPage({super.key});
 
@@ -18,29 +26,17 @@ class LottoGetNumberPage extends StatefulWidget {
 }
 
 class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
-  Widget textWidget = const Text(
-    '# 여기를 눌러보세요!',
-    style: TextStyle(color: Colors.black, fontSize: 20),
-  );
-  Widget textWidget2 = const Text(
-    '# 여기를 눌러보세요!',
-    style: TextStyle(color: Colors.black, fontSize: 20),
-  );
-  Widget textWidget3 = const Text(
-    '# 여기를 눌러보세요!',
-    style: TextStyle(color: Colors.black, fontSize: 20),
-  );
-  Widget textWidget4 = const Text(
-    '# 여기를 눌러보세요!',
-    style: TextStyle(color: Colors.black, fontSize: 20),
-  );
-  Widget textWidget5 = const Text(
-    '# 여기를 눌러보세요!',
-    style: TextStyle(color: Colors.black, fontSize: 20),
-  );
-
-  List<bool> bSwitch = [false, false, false, false, false];
+  List<Widget> lottoWidget = [
+    lottoWidgetCover,
+    lottoWidgetCover,
+    lottoWidgetCover,
+    lottoWidgetCover,
+    lottoWidgetCover,
+  ];
+  List<bool> _visibility = [true, false, false, false, false];
+  bool _visibleBtn = false;
   List<dynamic> lottogamesList = ['', '', '', '', ''];
+
   @override
   Widget build(BuildContext context) {
     return Consumer<LottoService>(builder: (context, lottoservice, child) {
@@ -85,7 +81,7 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
                         color: Colors.green,
                       ),
                     ),
-                    TextSpan(
+                    const TextSpan(
                       text: " ",
                       style: TextStyle(fontSize: 5),
                     ),
@@ -121,125 +117,179 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
         body: SafeArea(
           child: SingleChildScrollView(
             // 작은 화면에서 아래 넘칠 경우 스크롤
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 100,
-                  padding: const EdgeInsets.all(8),
-                  child: TextButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: Colors.grey[300]),
-                      onPressed: () {
-                        if (bSwitch[0] == false) {
-                          List<int> lottoNum = _getLottoNum();
-                          lottogamesList[0] = lottoNum;
-                          String json = _setLottoNum(lottoNum);
+                // lottoWidget1
+                Visibility(
+                  visible: _visibility[0],
+                  child: Container(
+                    width: double.infinity,
+                    height: 100,
+                    padding: const EdgeInsets.all(8),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.grey[300]),
+                        onPressed: () {
+                          if (lottoWidget[0] != lottoWidgetCover) {
+                            _showDialog(context, lottogamesList[0]);
+                          } else {
+                            List<int> lottoNum = _getLottoNum();
+                            lottogamesList[0] = lottoNum;
+                            String json = _setLottoNum(lottoNum);
 
-                          setState(() {
-                            textWidget =
-                                LottoBallWidget(data: jsonDecode(json));
-                            bSwitch[0] = true;
-                          });
-                        } else {
-                          _showDialog(context, lottogamesList[0]);
-                        }
-                      },
-                      child: textWidget),
+                            setState(() {
+                              lottoWidget[0] =
+                                  LottoBallWidget(data: jsonDecode(json));
+                              _visibility[1] = true;
+                            });
+                          }
+                        },
+                        child: lottoWidget[0]),
+                  ),
                 ),
-                Container(
-                  width: double.infinity,
-                  height: 100,
-                  padding: const EdgeInsets.all(8),
-                  child: TextButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: Colors.grey[300]),
-                      onPressed: () {
-                        if (bSwitch[1] == false) {
-                          List<int> lottoNum = _getLottoNum();
-                          lottogamesList[1] = lottoNum;
-                          String json = _setLottoNum(lottoNum);
-                          setState(() {
-                            textWidget2 =
-                                LottoBallWidget(data: jsonDecode(json));
-                            bSwitch[1] = true;
-                          });
-                        } else {
-                          _showDialog(context, lottogamesList[1]);
-                        }
-                      },
-                      child: textWidget2),
+                // lottoWidget2
+                Visibility(
+                  visible: _visibility[1],
+                  child: Container(
+                    width: double.infinity,
+                    height: 100,
+                    padding: const EdgeInsets.all(8),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.grey[300]),
+                        onPressed: () {
+                          if (lottoWidget[1] != lottoWidgetCover) {
+                            _showDialog(context, lottogamesList[1]);
+                          } else {
+                            List<int> lottoNum = _getLottoNum();
+                            lottogamesList[1] = lottoNum;
+                            String json = _setLottoNum(lottoNum);
+                            setState(() {
+                              lottoWidget[1] =
+                                  LottoBallWidget(data: jsonDecode(json));
+                              _visibility[2] = true;
+                            });
+                          }
+                        },
+                        child: lottoWidget[1]),
+                  ),
                 ),
-                Container(
-                  width: double.infinity,
-                  height: 100,
-                  padding: const EdgeInsets.all(8),
-                  child: TextButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: Colors.grey[300]),
-                      onPressed: () {
-                        if (bSwitch[2] == false) {
-                          List<int> lottoNum = _getLottoNum();
-                          lottogamesList[2] = lottoNum;
-                          String json = _setLottoNum(lottoNum);
-                          setState(() {
-                            textWidget3 =
-                                LottoBallWidget(data: jsonDecode(json));
-                            bSwitch[2] = true;
-                          });
-                        } else {
-                          _showDialog(context, lottogamesList[2]);
-                        }
-                      },
-                      child: textWidget3),
+                // lottoWidget3
+                Visibility(
+                  visible: _visibility[2],
+                  child: Container(
+                    width: double.infinity,
+                    height: 100,
+                    padding: const EdgeInsets.all(8),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.grey[300]),
+                        onPressed: () {
+                          if (lottoWidget[2] != lottoWidgetCover) {
+                            _showDialog(context, lottogamesList[2]);
+                          } else {
+                            List<int> lottoNum = _getLottoNum();
+                            lottogamesList[2] = lottoNum;
+                            String json = _setLottoNum(lottoNum);
+                            setState(() {
+                              lottoWidget[2] =
+                                  LottoBallWidget(data: jsonDecode(json));
+                              _visibility[3] = true;
+                            });
+                          }
+                        },
+                        child: lottoWidget[2]),
+                  ),
                 ),
-                Container(
-                  width: double.infinity,
-                  height: 100,
-                  padding: const EdgeInsets.all(8),
-                  child: TextButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: Colors.grey[300]),
-                      onPressed: () {
-                        if (bSwitch[3] == false) {
-                          List<int> lottoNum = _getLottoNum();
-                          lottogamesList[3] = lottoNum;
-                          String json = _setLottoNum(lottoNum);
-                          setState(() {
-                            textWidget4 =
-                                LottoBallWidget(data: jsonDecode(json));
-                            bSwitch[3] = true;
-                          });
-                        } else {
-                          _showDialog(context, lottogamesList[3]);
-                        }
-                      },
-                      child: textWidget4),
+                // lottoWidget4
+                Visibility(
+                  visible: _visibility[3],
+                  child: Container(
+                    width: double.infinity,
+                    height: 100,
+                    padding: const EdgeInsets.all(8),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.grey[300]),
+                        onPressed: () {
+                          if (lottoWidget[3] != lottoWidgetCover) {
+                            _showDialog(context, lottogamesList[3]);
+                          } else {
+                            List<int> lottoNum = _getLottoNum();
+                            lottogamesList[3] = lottoNum;
+                            String json = _setLottoNum(lottoNum);
+                            setState(() {
+                              lottoWidget[3] =
+                                  LottoBallWidget(data: jsonDecode(json));
+                              _visibility[4] = true;
+                            });
+                          }
+                        },
+                        child: lottoWidget[3]),
+                  ),
                 ),
-                Container(
-                  width: double.infinity,
-                  height: 100,
-                  padding: const EdgeInsets.all(8),
-                  child: TextButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: Colors.grey[300]),
+                // lottoWidget5
+                Visibility(
+                  visible: _visibility[4],
+                  child: Container(
+                    width: double.infinity,
+                    height: 100,
+                    padding: const EdgeInsets.all(8),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.grey[300]),
+                        onPressed: () {
+                          if (lottoWidget[4] != lottoWidgetCover) {
+                            _showDialog(context, lottogamesList[4]);
+                          } else {
+                            List<int> lottoNum = _getLottoNum();
+                            lottogamesList[4] = lottoNum;
+                            String json = _setLottoNum(lottoNum);
+                            setState(() {
+                              lottoWidget[4] =
+                                  LottoBallWidget(data: jsonDecode(json));
+                              _visibleBtn = true;
+                            });
+                          }
+                        },
+                        child: lottoWidget[4]),
+                  ),
+                ),
+
+                // 다시 뽑기 버튼
+                Visibility(
+                  visible: _visibleBtn,
+                  child: Center(
+                    child: TextButton(
+                      style: TextButton.styleFrom(),
                       onPressed: () {
-                        if (bSwitch[4] == false) {
-                          List<int> lottoNum = _getLottoNum();
-                          lottogamesList[4] = lottoNum;
-                          String json = _setLottoNum(lottoNum);
-                          setState(() {
-                            textWidget5 =
-                                LottoBallWidget(data: jsonDecode(json));
-                            bSwitch[4] = true;
-                          });
-                        } else {
-                          _showDialog(context, lottogamesList[4]);
+                        for (int i = 1; i < _visibility.length; i++) {
+                          _visibility[0] = true;
+                          _visibility[i] = false;
                         }
+                        setState(() {
+                          for (int i = 0; i < lottoWidget.length; i++) {
+                            lottoWidget[i] = lottoWidgetCover;
+                          }
+                          _visibleBtn = false;
+                        });
                       },
-                      child: textWidget5),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Icon(Icons.recycling, size: 24),
+                          SizedBox(width: 8),
+                          Text(
+                            "다시 뽑기",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -277,6 +327,19 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
     return json;
   }
 
+  // 뒤로가기 버튼 이벤트
+  willPopScope() {
+    List<Widget> lottoWidget = [
+      lottoWidgetCover,
+      lottoWidgetCover,
+      lottoWidgetCover,
+      lottoWidgetCover,
+      lottoWidgetCover,
+    ];
+    return 0;
+  }
+
+  // 번호 저장 다이얼로그
   _showDialog(BuildContext context, List<int> lottogames) {
     showDialog(
       context: context,
@@ -301,13 +364,22 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
             TextButton(
               child: const Text("저장"),
               onPressed: () async {
+                // 오늘의 날짜 받아오기
+                DateTime now = DateTime.now();
+                DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+                dateToday = dateFormat.format(now);
+
                 AuthService authService = context.read<AuthService>();
                 User? user = authService.currentUser()!;
                 LottoService lottoService = context.read<LottoService>();
 
-                lottoService.create(user.uid, lottogames);
-
+                lottoService.create(
+                  user.uid,
+                  lottogames,
+                  dateToday,
+                );
                 Navigator.pop(context);
+
                 showDialog(
                   context: context,
                   builder: (context) {
