@@ -26,6 +26,7 @@ dependencies:
   kakaomap_webview: ^0.6.2
   webview_flutter: ^3.0.2
   geolocator: ^9.0.2
+  flame: 1.7.3
 
   intl: ^0.17.0
   google_sign_in: ^6.1.4

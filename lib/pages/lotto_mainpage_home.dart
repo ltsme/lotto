@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:lotto/pages/KakaoMapScreen.dart';
-import 'package:lotto/pages/lotto_gamepage.dart';
+import 'package:lotto/pages/game/game1/lotto_game1.dart';
 import 'package:lotto/pages/qrscanresultpage.dart';
 import 'package:lotto/widgets/LoadingPage.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
@@ -568,14 +568,14 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // 기능 4_1 로또 게임 페이지 이동
+              // -----기능 4_1 로또 게임 페이지 이동
               InkWell(
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const LottoGamePage(),
+                      builder: (context) => LottoGamePage(Game1()),
                     ),
                   );
                 },
@@ -595,7 +595,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
               ),
               const SizedBox(width: 24),
 
-              // 기능 4_2 로또 번호 추출 페이지 이동
+              // -----기능 4_2 로또 번호 추출 페이지 이동
               InkWell(
                 onTap: () {
                   Navigator.pop(context);

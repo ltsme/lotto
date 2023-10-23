@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "Flutter (lib/pages/lotto_gamepage.dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/pages/lotto_gamepage.dart"
+        }
+    ]
+}
