@@ -5,6 +5,7 @@ import 'package:lotto/pages/game/game1/direction.dart';
 
 class Player extends SpriteComponent with CollisionCallbacks, HasGameRef {
   final double _playerSpeed = 300.0;
+  double speed = 0.0;
 
   int totalCount = 0;
   Direction direction = Direction.none;
@@ -42,10 +43,12 @@ class Player extends SpriteComponent with CollisionCallbacks, HasGameRef {
   }
 
   void moveLeft(double delta) {
-    position.add(Vector2(delta * -_playerSpeed * 1.2, 0));
+    speed = -_playerSpeed;
+    position.add(Vector2(delta * speed * 1.2, 0));
   }
 
   void moveRight(double delta) {
-    position.add(Vector2(delta * _playerSpeed * 1.2, 0));
+    speed = _playerSpeed;
+    position.add(Vector2(delta * speed * 1.2, 0));
   }
 }
