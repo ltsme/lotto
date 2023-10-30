@@ -218,16 +218,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // --! 광고 그림 위젯, 팝업으로 띄울 것 [다시보지 않기, 닫기]
-                            // Padding(
-                            //   padding: const EdgeInsets.symmetric(
-                            //       horizontal: 20, vertical: 12),
-                            //   child: ClipRRect(
-                            //     borderRadius: BorderRadius.circular(8),
-                            //     child: Image.asset(
-                            //         'assets/images/advertise_image.png'),
-                            //   ),
-                            // ),
                             Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 16),

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:lotto/pages/login/lotto_loginpage.dart';
+import 'package:lotto/widgets/appbar.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
 import 'package:flutter/material.dart';
@@ -41,79 +43,7 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
   Widget build(BuildContext context) {
     return Consumer<LottoService>(builder: (context, lottoservice, child) {
       return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.black),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  // 공통 스타일
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 35),
-                  children: [
-                    TextSpan(
-                      text: "L",
-                      style: TextStyle(
-                        color: Colors.blue.shade700,
-                        fontSize: 35,
-                      ),
-                    ),
-                    TextSpan(
-                      text: "o",
-                      style: TextStyle(
-                        color: appMainColor,
-                      ),
-                    ),
-                    TextSpan(
-                      text: "tt",
-                      style: TextStyle(
-                        color: Colors.blue.shade700,
-                      ),
-                    ),
-                    const TextSpan(
-                      text: "o",
-                      style: TextStyle(
-                        color: Colors.green,
-                      ),
-                    ),
-                    const TextSpan(
-                      text: " ",
-                      style: TextStyle(fontSize: 5),
-                    ),
-                    TextSpan(
-                      text: "6",
-                      style:
-                          TextStyle(color: Colors.blue.shade700, fontSize: 19),
-                    ),
-                    const TextSpan(
-                      text: "/",
-                      style: TextStyle(color: Colors.green, fontSize: 20),
-                    ),
-                    TextSpan(
-                      text: "45",
-                      style:
-                          TextStyle(color: Colors.blue.shade700, fontSize: 19),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          // title: Image.asset('assets/images/logo.png', height: 32),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.settings,
-              ),
-            ),
-          ],
-        ),
+        appBar: AppBarWidget(context),
         body: SafeArea(
           child: SingleChildScrollView(
             // 작은 화면에서 아래 넘칠 경우 스크롤

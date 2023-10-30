@@ -24,6 +24,51 @@ class _LottoMainPageMyPageState extends State<LottoMainPageMyPage> {
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity, // 가득 채우기
+                child: Column(
+                  children: [
+                    /// 동그란 배경
+                    CircleAvatar(
+                      radius: 36,
+                      backgroundColor: Colors.grey.shade200,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+
+                        /// 이미지
+                        child: Image.network(
+                          "https://i.ibb.co/CwzHq4z/trans-logo-512.png",
+                          width: 62,
+                        ),
+                      ),
+                    ),
+
+                    /// 닉네임 상단 여백
+                    SizedBox(height: 16),
+
+                    /// 닉네임
+                    Text(
+                      //"닉네임 : ${widget.uid}",
+                      "Nickname",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+
+                    /// 이메일
+                    Text(
+                      "hello@world.com",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 32),
               ListTile(
                 onTap: () => print("공지사항 클릭"),
                 contentPadding: EdgeInsets.all(0),
@@ -42,41 +87,10 @@ class _LottoMainPageMyPageState extends State<LottoMainPageMyPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
-              const SizedBox(height: 16),
-              Image.asset("assets/images/icon.jpg"),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Future<bool> willPopScope() async {
-    return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-          title: const Text("앱을 종료하시겠습니까?"),
-          actions: <Widget>[
-            ElevatedButton(
-                onPressed: () {
-                  // true가 전달되어 앱이 종료 됨.
-                  SystemNavigator.pop();
-                },
-                child: Text("예")),
-            ElevatedButton(
-                onPressed: () {
-                  // false가 전달되어 앱이 종료 되지 않음
-                  Navigator.pop(context, false);
-                },
-                child: Text("아니오")),
-          ],
-        );
-      },
     );
   }
 }
