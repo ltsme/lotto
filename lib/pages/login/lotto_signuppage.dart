@@ -30,84 +30,13 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
       User? user = authservice.currentUser();
       return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.black),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  // 공통 스타일
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 35),
-                  children: [
-                    TextSpan(
-                      text: "L",
-                      style: TextStyle(
-                        color: Colors.blue.shade700,
-                        fontSize: 35,
-                      ),
-                    ),
-                    TextSpan(
-                      text: "o",
-                      style: TextStyle(
-                        color: appMainColor,
-                      ),
-                    ),
-                    TextSpan(
-                      text: "tt",
-                      style: TextStyle(
-                        color: Colors.blue.shade700,
-                      ),
-                    ),
-                    const TextSpan(
-                      text: "o",
-                      style: TextStyle(
-                        color: Colors.green,
-                      ),
-                    ),
-                    const TextSpan(
-                      text: " ",
-                      style: TextStyle(fontSize: 5),
-                    ),
-                    TextSpan(
-                      text: "6",
-                      style:
-                          TextStyle(color: Colors.blue.shade700, fontSize: 19),
-                    ),
-                    const TextSpan(
-                      text: "/",
-                      style: TextStyle(color: Colors.green, fontSize: 20),
-                    ),
-                    TextSpan(
-                      text: "45",
-                      style:
-                          TextStyle(color: Colors.blue.shade700, fontSize: 19),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          // 가운데 정렬 UI를을 위한 숨겨진 아이콘
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.abc, color: Colors.white),
-            ),
-          ],
-          // title: Image.asset('assets/images/logo.png', height: 32),
-        ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 36),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 72),
                 RichText(
                   text: const TextSpan(
                     style: TextStyle(fontSize: 24, color: Colors.black),
@@ -124,7 +53,7 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 48),
                 RichText(
                   text: const TextSpan(
                     style: TextStyle(
@@ -139,7 +68,7 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                 ),
                 const SizedBox(height: 6),
                 TextField(
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 16, color: Colors.black),
                   controller: emailController,
                   decoration: const InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -172,10 +101,10 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 TextField(
                   obscureText: true,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
                   controller: passwordController,
                   decoration: const InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -199,10 +128,10 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                   '비밀번호는 문자와 숫자를 포함해 6~16자로 입력해주세요.',
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: 24),
                 TextField(
                   obscureText: true,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
                   controller: passwordCheckController,
                   decoration: const InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -228,7 +157,7 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                     });
                   },
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 48),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -238,12 +167,8 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                         password: passwordController.text,
                         passwordcheck: passwordCheckController.text,
                         onSuccess: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const LottoSignUpPageNick(),
-                              ));
+                          Navigator.pop(context);
+                          signupDialog();
                         },
                         onError: (error) {
                           ScaffoldMessenger.of(context)
@@ -263,6 +188,30 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
         ),
       );
     });
+  }
+
+  void signupDialog() {
+    showDialog(
+        context: context,
+        //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            content: const Text(
+              "회원가입이 완료되었습니다!\n로그인 해 주세요",
+            ),
+            actions: [
+              TextButton(
+                child: const Text("확인"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Future<bool> willPopScope() async {

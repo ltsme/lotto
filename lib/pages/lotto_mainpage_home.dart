@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:lotto/pages/KakaoMapScreen.dart';
 import 'package:lotto/pages/game/game1/lotto_game1.dart';
+import 'package:lotto/pages/lotto_todaylucky.dart';
 import 'package:lotto/pages/qrscanresultpage.dart';
 import 'package:lotto/widgets/LoadingPage.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
@@ -86,12 +87,12 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   // 로또 번호 리스트
   List<int> lottoNumList = const [];
 
-  // 오늘의 운세 Url
-  String naverUrl =
-      'https://m.search.naver.com/search.naver?sm=mtp_hty.top&where=m&query=%EB%84%A4%EC%9D%B4%EB%B2%84+%EC%9A%B4%EC%84%B8';
-
   final textController = TextEditingController();
+  final textControllerY = TextEditingController();
+  final textControllerM = TextEditingController();
+  final textControllerD = TextEditingController();
   final dialogController = TextEditingController(text: '');
+  final dialogController2 = TextEditingController(text: '');
 
   // createState()로 State 객체가 생성 된 후 initState()가 호출
   // 처음 한번만 호출 된다.
@@ -266,14 +267,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                     children: [
                                       IconButton(
                                         onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  QrScanResultPage(
-                                                      url: naverUrl),
-                                            ),
-                                          );
+                                          _todayLuckyDialog();
                                         },
                                         icon: Image.asset(
                                             'assets/images/icon_clover.png'),
@@ -304,7 +298,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                     ),
                                     TextSpan(
                                       text:
-                                          " (${thisRoundlottoData['drwNoDate']})",
+                                          " (${thisRoundlottoData['drwNoDate']}, $thisRoundDrwNo회)",
                                       style: const TextStyle(
                                         fontSize: 16,
                                       ),
@@ -339,34 +333,34 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                 ),
                               ),
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5.0),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 1,
-                                    spreadRadius: 1,
-                                    offset: Offset(1, 1),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    onPressed: () async {
-                                      await openKakaoMap(context);
-                                    },
-                                    icon: Image.asset(
-                                      'assets/images/icon_map.png',
+                            InkWell(
+                              onTap: () async {
+                                await openKakaoMap(context);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 1,
+                                      spreadRadius: 1,
+                                      offset: Offset(1, 1),
                                     ),
-                                    iconSize: 60,
-                                    tooltip: '지도 보기',
-                                  ),
-                                  const Text('주변 찾아보기')
-                                ],
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/icon_map.png',
+                                      width: 60,
+                                    ),
+                                    const Text('주변 찾아보기')
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(height: 32),
@@ -488,6 +482,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                     width: 50,
                     height: 20,
                     child: TextField(
+                      textAlign: TextAlign.center,
                       controller: textController,
                       maxLength: 4,
                       enabled: true,
@@ -710,6 +705,142 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
     } else {
       throw Exception('Fail');
     }
+  }
+
+  // 오늘의 운세 다이얼로그
+  void _todayLuckyDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, //  빈 곳을 눌렀을 때, 창이 닫히는 지
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+          title: Column(
+            children: const [
+              Text(
+                '생년월일을 입력해 주세요!',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          content: Column(
+            // alertDialog에 Column 넣을 경우 사이즈 고정
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: 50,
+                    height: 20,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      controller: textControllerY,
+                      maxLength: 4,
+                      enabled: true,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(counterText: ''),
+                    ),
+                  ),
+                  const Text("년"),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: 30,
+                    height: 20,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      controller: textControllerM,
+                      maxLength: 2,
+                      enabled: true,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(counterText: ''),
+                    ),
+                  ),
+                  const Text("월"),
+                  SizedBox(
+                    width: 30,
+                    height: 20,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      controller: textControllerD,
+                      maxLength: 2,
+                      enabled: true,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(counterText: ''),
+                    ),
+                  ),
+                  const Text("일"),
+                ],
+              ),
+              TextField(
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.amber),
+                controller: dialogController2,
+                enabled: false,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: const Text("취소"),
+              onPressed: () {
+                Navigator.pop(context);
+                textControllerY.text = '';
+                textControllerM.text = '';
+                textControllerD.text = '';
+                dialogController2.text = '';
+              },
+            ),
+            TextButton(
+              child: const Text("확인"),
+              onPressed: () {
+                if (textControllerY.text.isEmpty) {
+                  setState(() {
+                    dialogController2.text = '년도를 확인해 주세요!';
+                  });
+                } else if (textControllerM.text.isEmpty) {
+                  setState(() {
+                    dialogController2.text = '월을 확인해 주세요!';
+                  });
+                } else if (textControllerD.text.isEmpty) {
+                  setState(() {
+                    dialogController2.text = '일을 확인해 주세요!';
+                  });
+                } else {
+                  int year = int.parse(textControllerY.text);
+                  int month = int.parse(textControllerM.text);
+                  int day = int.parse(textControllerD.text);
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LottoTodayLucky(
+                              yearStr: year,
+                              monthStr: month,
+                              dayStr: day,
+                            )),
+                  );
+                  textControllerY.text = '';
+                  textControllerM.text = '';
+                  textControllerD.text = '';
+                  dialogController2.text = '';
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // ----- 메소드 -----

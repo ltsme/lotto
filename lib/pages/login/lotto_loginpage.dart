@@ -5,6 +5,7 @@ import 'package:lotto/pages/lotto_mainpage.dart';
 import 'package:lotto/pages/login/lotto_pwfindingpage.dart';
 import 'package:lotto/pages/login/lotto_signuppage.dart';
 import 'package:lotto/widgets/auth_service.dart';
+import 'package:lotto/widgets/dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -32,15 +33,19 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
           body: WillPopScope(
             onWillPop: () => willPopScope(),
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 32),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 48),
               child: Column(
                 children: [
                   const SizedBox(height: 24),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 32, horizontal: 16),
-                    child: Image.asset(
-                      'assets/images/icon.jpg',
+                    child: SizedBox(
+                      width: 300,
+                      height: 120,
+                      child: Image.asset(
+                        'assets/images/icon.jpg',
+                      ),
                     ),
                   ),
                   Container(
@@ -48,11 +53,12 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                       border: Border.all(color: Colors.grey),
                     ),
                     child: TextField(
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
                       controller: emailController,
                       decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.perm_identity),
                           border: InputBorder.none,
+                          focusColor: Colors.black,
                           focusedBorder: InputBorder.none,
                           hintText: '아이디'),
                     ),
@@ -64,7 +70,7 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                     ),
                     child: TextField(
                       obscureText: true,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
                       controller: passwordController,
                       decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.key),
@@ -73,7 +79,7 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                           hintText: '비밀번호'),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 32),
                   // 로그인 버튼
                   SizedBox(
                     width: double.infinity,
@@ -113,24 +119,10 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LottoPwFindingPage(),
-                              ),
-                            );
-                          },
-                          child: Text('비밀번호 재 설정',
-                              style: TextStyle(fontSize: 12))),
-                      SizedBox(width: 4),
-                      Text('|'),
-                      SizedBox(width: 4),
                       TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -140,7 +132,27 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                             ),
                           );
                         },
-                        child: Text('회원 가입', style: TextStyle(fontSize: 12)),
+                        child: const Text(
+                          '회원 가입',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Text('|'),
+                      const SizedBox(width: 4),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LottoPwFindingPage(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          '비밀번호 재 설정',
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
                     ],
                   ),
@@ -157,14 +169,17 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                       Container(
                         alignment: Alignment.center,
                         child: const Expanded(
-                          child: Text('이런 로그인도 가능해요!'),
                           flex: 2,
+                          child: Text(
+                            '이런 로그인도 가능해요!',
+                            style: TextStyle(fontSize: 16),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 10),
                       const Expanded(
-                        child: Divider(thickness: 1, color: Colors.grey),
                         flex: 1,
+                        child: Divider(thickness: 1, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -216,32 +231,7 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
   }
 
   Future<bool> willPopScope() async {
-    return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-          title: const Text("앱을 종료하시겠습니까?"),
-          actions: <Widget>[
-            ElevatedButton(
-                onPressed: () {
-                  // true가 전달되어 앱이 종료 됨.
-                  SystemNavigator.pop();
-                },
-                child: Text("예")),
-            ElevatedButton(
-                onPressed: () {
-                  // false가 전달되어 앱이 종료 되지 않음
-                  Navigator.pop(context, false);
-                },
-                child: Text("아니오")),
-          ],
-        );
-      },
-    );
+    return await WillPopDialogWidget(context);
   }
 
   Future<UserCredential> googleAuthSignIn() async {

@@ -187,7 +187,8 @@ class _LottoPwFindingPageState extends State<LottoPwFindingPage> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
             content: const Text(
-              "비밀번호 재 설정 이메일이\n전송되었습니다!😜",
+              "비밀번호 재 설정 이메일이\n전송되었습니다! 😜",
+              style: TextStyle(fontSize: 16),
             ),
             actions: [
               TextButton(

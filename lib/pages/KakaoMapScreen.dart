@@ -45,7 +45,7 @@ class _KakaoMapScreenState extends State<KakaoMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      padding: const EdgeInsets.all(0),
       child: Container(
         padding: const EdgeInsets.all(12),
         color: Colors.grey,
@@ -61,8 +61,7 @@ class _KakaoMapScreenState extends State<KakaoMapScreen> {
           showMapTypeControl: true,
           showZoomControl: true,
           draggableMarker: true,
-          markerImageURL:
-              'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png',
+          markerImageURL: 'https://i.ibb.co/qF0Q6Xj/icon-mapping.png',
           onTapMarker: (message) {
             //event callback when the marker is tapped
             ScaffoldMessenger.of(context).showSnackBar(
