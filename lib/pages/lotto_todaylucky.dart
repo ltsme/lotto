@@ -32,6 +32,7 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
     getZodiac();
     getConstella();
     getDate();
+
     super.initState();
   }
 
@@ -105,9 +106,7 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
 
   Future getDate() async {
     var url = Uri.parse(
-        'https://search.naver.com/search.naver?where=nexearch&sm=tab_etc&qvt=0&query=$zodiac%20%EC%9A%B4%EC%84%B8');
-
-    log("날아간 url = $url");
+        'https://openapi.naver.com/v1/search/webkr.json?query=$zodiac오늘의운세&display=1');
 
     http.Response response = await http.get(
       url,
@@ -120,7 +119,11 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
     var statusCode = response.statusCode;
     var responseHeaders = response.headers;
     var responseBody = utf8.decode(response.bodyBytes);
-    msg = responseBody;
+    setState(() {
+      msg = responseBody;
+    });
+
+    log(response.body);
 
     print('get_statusCode : $statusCode');
     //print('get_responseHeaders : $responseHeaders');

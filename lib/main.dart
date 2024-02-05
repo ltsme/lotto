@@ -27,6 +27,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // 이 위젯은 애플리케이션의 루트에 해당합니다.
   @override
   Widget build(BuildContext context) {
     // 로그인 여부 체크 후, OnboardingPage또는 LottoMainpage를 띄운다.
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      // 애플리케이션의 테마를 설정합니다.
       theme: ThemeData(textTheme: GoogleFonts.getTextTheme('Jua')),
       home: user == null
           ? const LottoOnboardingPage()
