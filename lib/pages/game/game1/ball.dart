@@ -1,4 +1,6 @@
 // Ball 클래스
+import 'dart:developer';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:lotto/pages/game/game1/enemyblock.dart';
@@ -34,26 +36,26 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks {
     // 공이(position) 화면 위에 부딪힌 경우, 공의 y 이동방향 반대
     if (position.y < ballSize) {
       speedY = -speedY;
-      print("Game debug : 공 화면 위 부딪힘");
+      log("Game debug : 공 화면 위 부딪힘");
     }
 
     // 공이(position) 화면 아래에 부딪힌 경우, 공 삭제, 라이프 -1
     // Star의 anchor가 bottomCenter 이므로, position.y 값에서 size.y를 뺀다.
     if (position.y - ballSize > gameRef.size.y) {
       removeFromParent();
-      print("Game debug : 공 화면 아래 나감, 공 삭제");
+      log("Game debug : 공 화면 아래 나감, 공 삭제");
     }
 
     // 공이(position) 화면 왼쪽에 부딪힌 경우, 공의 x 이동방향 반대
     if (position.x < (ballSize / 2)) {
       speedX = -speedX;
-      print("Game debug : 공 화면 왼쪽 부딪힘");
+      log("Game debug : 공 화면 왼쪽 부딪힘");
     }
 
     // 공이(position) 화면 오른쪽에 부딪힌 경우, 공의 x 이동방향 반대
     if (position.x > gameRef.size.x - ballSize / 2) {
       speedX = -speedX;
-      print("Game debug : 공 화면 오른쪽 부딪힘");
+      log("Game debug : 공 화면 오른쪽 부딪힘");
     }
   }
 
@@ -67,8 +69,8 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks {
 
     // 공이 Player와 부딪힐 때
     if (isCollidingY && other is Player) {
-      print("Game debug : Ball Player와 충돌, onCollision");
-      print("Game debug : Player(other) speed is : ${other.speed}");
+      log("Game debug : Ball Player와 충돌, onCollision");
+      log("Game debug : Player(other) speed is : ${other.speed}");
 
       // Player 오른쪽 이동
       if (other.speed > 0) {
@@ -87,7 +89,7 @@ class Ball extends SpriteComponent with HasGameRef, CollisionCallbacks {
 
     // 공이 EnemyBlock와 부딪힐 때
     if (isCollidingY && other is EnemyBlock) {
-      print("Game debug : Ball Block과 충돌, onCollision");
+      log("Game debug : Ball Block과 충돌, onCollision");
       speedY = -speedY;
       other.removeFromParent();
       return;

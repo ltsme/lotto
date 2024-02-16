@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:lotto/pages/login/lotto_loginpage.dart';
-import 'package:lotto/widgets/appbar.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
 import 'package:flutter/material.dart';
 import 'package:lotto/widgets/lotto_service.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/appbar.dart';
 
 // Lotto 앱 메인 컬러
 Color appMainColor = Colors.blue.shade400;
@@ -35,7 +35,7 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
     lottoWidgetCover,
     lottoWidgetCover,
   ];
-  List<bool> _visibility = [true, false, false, false, false];
+  final List<bool> _visibility = [true, false, false, false, false];
   bool _visibleBtn = false;
   List<dynamic> lottogamesList = ['', '', '', '', ''];
 
@@ -43,7 +43,7 @@ class _LottoLottoGetNumberPage extends State<LottoGetNumberPage> {
   Widget build(BuildContext context) {
     return Consumer<LottoService>(builder: (context, lottoservice, child) {
       return Scaffold(
-        appBar: AppBarWidget(context),
+        appBar: appBarWidget(context),
         body: SafeArea(
           child: SingleChildScrollView(
             // 작은 화면에서 아래 넘칠 경우 스크롤

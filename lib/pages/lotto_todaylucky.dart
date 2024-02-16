@@ -16,7 +16,7 @@ String msg = '';
 
 class LottoTodayLucky extends StatefulWidget {
   final int yearStr, monthStr, dayStr;
-  LottoTodayLucky(
+  const LottoTodayLucky(
       {super.key,
       required this.yearStr,
       required this.monthStr,
@@ -40,7 +40,7 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
   Widget build(BuildContext context) {
     return Consumer<LottoService>(builder: (context, lottoservice, child) {
       return Scaffold(
-        appBar: AppBarWidget(context),
+        appBar: appBarWidget(context),
         body: SafeArea(
           child: SingleChildScrollView(
             // 작은 화면에서 아래 넘칠 경우 스크롤
@@ -125,8 +125,8 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
 
     log(response.body);
 
-    print('get_statusCode : $statusCode');
+    log('get_statusCode : $statusCode');
     //print('get_responseHeaders : $responseHeaders');
-    print('get_responseBody : $responseBody'); // 한글을 위해
+    log('get_responseBody : $responseBody'); // 한글을 위해
   }
 }

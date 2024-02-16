@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-Future WillPopDialogWidget(BuildContext context) {
+Future willPopDialogWidget(BuildContext context) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {

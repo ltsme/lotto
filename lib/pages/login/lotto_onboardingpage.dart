@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lotto/pages/login/lotto_loginpage.dart';
@@ -110,6 +109,6 @@ class _LottoOnboardingPageState extends State<LottoOnboardingPage> {
   }
 
   Future<bool> willPopScope() async {
-    return await WillPopDialogWidget(context);
+    return await willPopDialogWidget(context);
   }
 }

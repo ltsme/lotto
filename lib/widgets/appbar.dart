@@ -4,7 +4,7 @@ import 'package:lotto/widgets/auth_service.dart';
 import 'package:lotto/widgets/sharedata.dart';
 import 'package:provider/provider.dart';
 
-AppBar AppBarWidget(BuildContext context) {
+AppBar appBarWidget(BuildContext context) {
   return AppBar(
     backgroundColor: Colors.white,
     elevation: 0,

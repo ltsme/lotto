@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class LottoMainPageMyPage extends StatefulWidget {
   const LottoMainPageMyPage({super.key});
@@ -19,11 +20,11 @@ class _LottoMainPageMyPageState extends State<LottoMainPageMyPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "나의 정보",
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity, // 가득 채우기
                 child: Column(
@@ -44,10 +45,10 @@ class _LottoMainPageMyPageState extends State<LottoMainPageMyPage> {
                     ),
 
                     /// 닉네임 상단 여백
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
                     /// 닉네임
-                    Text(
+                    const Text(
                       //"닉네임 : ${widget.uid}",
                       "Nickname",
                       style: TextStyle(
@@ -55,10 +56,10 @@ class _LottoMainPageMyPageState extends State<LottoMainPageMyPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
 
                     /// 이메일
-                    Text(
+                    const Text(
                       "hello@world.com",
                       style: TextStyle(
                         fontSize: 16,
@@ -68,21 +69,22 @@ class _LottoMainPageMyPageState extends State<LottoMainPageMyPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               ListTile(
-                onTap: () => print("공지사항 클릭"),
-                contentPadding: EdgeInsets.all(0),
-                leading: Icon(Icons.volume_mute_outlined, color: Colors.black),
-                title: Text(
+                onTap: () => log("공지사항 클릭"),
+                contentPadding: const EdgeInsets.all(0),
+                leading:
+                    const Icon(Icons.volume_mute_outlined, color: Colors.black),
+                title: const Text(
                   "공지사항",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
               ListTile(
-                onTap: () => print("문의사항 클릭"),
-                contentPadding: EdgeInsets.all(0),
-                leading: Icon(Icons.help_outline, color: Colors.black),
-                title: Text(
+                onTap: () => log("문의사항 클릭"),
+                contentPadding: const EdgeInsets.all(0),
+                leading: const Icon(Icons.help_outline, color: Colors.black),
+                title: const Text(
                   "버그 신고하기",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),

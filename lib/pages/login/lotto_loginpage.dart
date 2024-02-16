@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lotto/pages/lotto_mainpage.dart';
 import 'package:lotto/pages/login/lotto_pwfindingpage.dart';
 import 'package:lotto/pages/login/lotto_signuppage.dart';
@@ -19,7 +18,7 @@ class LottoLoginPage extends StatefulWidget {
 class _LottoLoginPageState extends State<LottoLoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  // final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +84,7 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        shape: StadiumBorder(),
+                        shape: const StadiumBorder(),
                       ),
                       onPressed: () {
                         authservice.signIn(
@@ -96,7 +95,7 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                                   .authStateChanges()
                                   .listen((event) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("로그인 성공")),
+                                  const SnackBar(content: Text("로그인 성공")),
                                 );
 
                                 // 로그인 성공 시 HomePage로 이동하면서 uid를 보내줌
@@ -128,7 +127,7 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LottoSignUpPage(),
+                              builder: (context) => const LottoSignUpPage(),
                             ),
                           );
                         },
@@ -145,7 +144,7 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LottoPwFindingPage(),
+                              builder: (context) => const LottoPwFindingPage(),
                             ),
                           );
                         },
@@ -162,18 +161,15 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       const Expanded(
-                        child: Divider(thickness: 1, color: Colors.grey),
                         flex: 1,
+                        child: Divider(thickness: 1, color: Colors.grey),
                       ),
                       const SizedBox(width: 10),
                       Container(
                         alignment: Alignment.center,
-                        child: const Expanded(
-                          flex: 2,
-                          child: Text(
-                            '이런 로그인도 가능해요!',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                        child: const Text(
+                          '이런 로그인도 가능해요!',
+                          style: TextStyle(fontSize: 16),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -191,18 +187,16 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            shape: StadiumBorder(),
+                            shape: const StadiumBorder(),
                           ),
                           onPressed: () {
-                            //googleAuthSignIn();
-
                             googleAuthSignIn();
 
                             FirebaseAuth.instance
                                 .authStateChanges()
                                 .listen((event) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("로그인 성공")),
+                                const SnackBar(content: Text("로그인 성공")),
                               );
 
                               // 로그인 성공 시 HomePage로 이동하면서 uid를 보내줌
@@ -231,12 +225,12 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
   }
 
   Future<bool> willPopScope() async {
-    return await WillPopDialogWidget(context);
+    return await willPopDialogWidget(context);
   }
 
   Future<UserCredential> googleAuthSignIn() async {
     //구글 Sign in 플로우 오픈
-    final GoogleSignInAccount? googleUser = await GoogleSignIn()?.signIn();
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     //구글 인증 정보 읽어오기
     final GoogleSignInAuthentication? googleAuth =

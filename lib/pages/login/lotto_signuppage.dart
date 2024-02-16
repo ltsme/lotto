@@ -1,10 +1,10 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:provider/provider.dart';
-
-import 'lotto_signuppage_nick.dart';
 
 // Lotto 앱 메인 컬러
 Color appMainColor = Colors.blue.shade300;
@@ -153,7 +153,7 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                   onChanged: (text) {},
                   onSubmitted: (text) {
                     setState(() {
-                      print(text);
+                      log(text);
                     });
                   },
                 ),
@@ -176,7 +176,7 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                         },
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       '다음',
                       style: TextStyle(fontSize: 12),
                     ),
@@ -230,13 +230,13 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
                   // true가 전달되어 앱이 종료 됨.
                   SystemNavigator.pop();
                 },
-                child: Text("예")),
+                child: const Text("예")),
             ElevatedButton(
                 onPressed: () {
                   // false가 전달되어 앱이 종료 되지 않음
                   Navigator.pop(context, false);
                 },
-                child: Text("아니오")),
+                child: const Text("아니오")),
           ],
         );
       },

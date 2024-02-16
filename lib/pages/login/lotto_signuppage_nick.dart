@@ -1,10 +1,10 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lotto/widgets/auth_service.dart';
 import 'package:lotto/widgets/dialog.dart';
 import 'package:provider/provider.dart';
-import 'dart:math';
 
 // Lotto 앱 메인 컬러
 Color appMainColor = Colors.blue.shade300;
@@ -18,7 +18,7 @@ class LottoSignUpPageNick extends StatefulWidget {
 
 class _LottoSignUpPageNickState extends State<LottoSignUpPageNick> {
   TextEditingController nicknameController = TextEditingController();
-  List nicknames = ['네잎 클로버, 행운, 럭키, 대박, 돼지 꿈 ,두근두근, 콩닥콩닥'];
+  List nicknames = ['네잎 클로버, 행운, 럭키, 대박, 두근두근'];
   String nickname = '';
 
   @override
@@ -85,18 +85,18 @@ class _LottoSignUpPageNickState extends State<LottoSignUpPageNick> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (nicknameController.text == null) {
+                      if ((nicknameController.text).isEmpty) {
                         nicknames.shuffle();
                         nickname = nicknames.first;
-                        print("랜덤 Test : nickname = $nickname");
+                        log("랜덤 Test : nickname = $nickname");
                       } else {
                         nickname = nicknameController.text;
-                        print("입력한 Test nickname = $nickname");
+                        log("입력한 Test nickname = $nickname");
                       }
                       // Firebase Store Nickname 등록과정
                       Navigator.pop(context);
                     },
-                    child: Text(
+                    child: const Text(
                       '회원 가입',
                       style: TextStyle(fontSize: 12),
                     ),
@@ -111,6 +111,6 @@ class _LottoSignUpPageNickState extends State<LottoSignUpPageNick> {
   }
 
   Future<bool> willPopScope() async {
-    return await WillPopDialogWidget(context);
+    return await willPopDialogWidget(context);
   }
 }

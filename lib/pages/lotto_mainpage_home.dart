@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:lotto/pages/KakaoMapScreen.dart';
-import 'package:lotto/pages/game/game1/lotto_game1.dart';
+import 'package:lotto/pages/game/lotto_game_home.dart';
+import 'package:lotto/pages/kakao_map_screen.dart';
 import 'package:lotto/pages/lotto_todaylucky.dart';
-import 'package:lotto/pages/qrscanresultpage.dart';
-import 'package:lotto/widgets/LoadingPage.dart';
+import 'package:lotto/widgets/loading_page.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
 import 'package:lotto/widgets/qrscan.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -56,8 +55,8 @@ final int thisRoundDrwNo = 1049 + difWeek;
 // 추첨일 당일
 var thisRoundlottoData;
 
-late double posLat = 0.0;
-late double posLon = 0.0;
+double posLat = 0.0;
+double posLon = 0.0;
 
 bool mapPermission = false;
 String testPermissiion = '';
@@ -178,10 +177,10 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                       // --! 스크롤 시 남아있는 영역, bottom
                       // SliverAppBar의 bottom은 PrefereedSize 위젯으로 시작해야만 한다.
                       bottom: PreferredSize(
-                        preferredSize: Size.fromHeight(40), // 영역의 높이
+                        preferredSize: const Size.fromHeight(40), // 영역의 높이
                         child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -234,7 +233,8 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => QrScan(),
+                                              builder: (context) =>
+                                                  const QrScan(),
                                             ),
                                           );
                                         },
@@ -428,13 +428,13 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                   // true가 전달되어 앱이 종료 됨.
                   SystemNavigator.pop();
                 },
-                child: Text("예")),
+                child: const Text("예")),
             ElevatedButton(
                 onPressed: () {
                   // false가 전달되어 앱이 종료 되지 않음
                   Navigator.pop(context, false);
                 },
-                child: Text("아니오")),
+                child: const Text("아니오")),
           ],
         );
       },
@@ -523,7 +523,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                   });
                 } else {
                   Navigator.pop(context);
-                  _showWinningNum(
+                  showWinningNum(
                     int.parse(textController.text),
                   );
                   textController.text = '';
@@ -560,7 +560,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => LottoGamePage(Game1()),
+                      builder: (context) => LottoGameHome(),
                     ),
                   );
                 },
@@ -624,9 +624,9 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   }
 
   // 회차 별 당첨 점보 보여주는 Dialog 생성 메소드
-  void _showWinningNum(int RoundNum) async {
+  void showWinningNum(int roundNum) async {
     var url = Uri.parse(
-        'http://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=$RoundNum');
+        'http://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=$roundNum');
     http.Response response = await http.get(url);
     var lottoData = jsonDecode(response.body);
 
@@ -651,16 +651,16 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                     Text(
                       "${lottoData['drwNo']}회",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.red, fontSize: 32),
+                      style: const TextStyle(color: Colors.red, fontSize: 32),
                     ),
-                    SizedBox(width: 10),
-                    Text("당첨결과", style: TextStyle(fontSize: 32)),
+                    const SizedBox(width: 10),
+                    const Text("당첨결과", style: TextStyle(fontSize: 32)),
                   ],
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   "(${lottoData['drwNoDate']} 추첨)",
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                  style: const TextStyle(color: Colors.grey, fontSize: 16),
                 ),
               ],
             ),
@@ -671,7 +671,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("총 상금액 : ", style: TextStyle(fontSize: 18)),
+                    const Text("총 상금액 : ", style: TextStyle(fontSize: 18)),
                     Text("${f.format(lottoData['totSellamnt'])} 원",
                         style:
                             TextStyle(fontSize: 18, color: Colors.grey[600])),
@@ -680,7 +680,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("1등 상금액 : ", style: TextStyle(fontSize: 18)),
+                    const Text("1등 상금액 : ", style: TextStyle(fontSize: 18)),
                     Text("${f.format(lottoData['firstWinamnt'])} 원",
                         style:
                             TextStyle(fontSize: 18, color: Colors.grey[600])),
@@ -689,7 +689,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("1등 당첨자 : ", style: TextStyle(fontSize: 18)),
+                    const Text("1등 당첨자 : ", style: TextStyle(fontSize: 18)),
                     Text("${lottoData['firstPrzwnerCo']} 명",
                         style:
                             TextStyle(fontSize: 18, color: Colors.grey[600])),

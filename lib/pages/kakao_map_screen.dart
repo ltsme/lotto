@@ -1,7 +1,5 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:kakaomap_webview/kakaomap_webview.dart';
 import 'package:lotto/pages/lotto_mainpage_home.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -25,7 +23,7 @@ class _KakaoMapScreenState extends State<KakaoMapScreen> {
 
   @override
   void initState() {
-    log("Lat = ${posLat} Lon ${posLon}");
+    log("Lat = $posLat Lon $posLon");
     super.initState();
   }
 
@@ -65,7 +63,7 @@ class _KakaoMapScreenState extends State<KakaoMapScreen> {
           onTapMarker: (message) {
             //event callback when the marker is tapped
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text("Marker is Clicked"),
               ),
             );

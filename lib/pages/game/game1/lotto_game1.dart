@@ -9,10 +9,10 @@ import 'package:lotto/pages/game/game1/joypad.dart';
 import 'package:lotto/pages/game/game1/player.dart';
 import 'package:lotto/pages/game/game1/world.dart';
 
-class LottoGamePage extends StatelessWidget {
+class LottoGameOne extends StatelessWidget {
   final Game1 game1;
 
-  LottoGamePage(this.game1, {super.key});
+  const LottoGameOne(this.game1, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -86,7 +87,8 @@ class _LottoMainPageLottolistState extends State<LottoMainPageLottolist> {
                         const SizedBox(height: 4),
                         ListTile(
                           tileColor: Colors.grey.shade300,
-                          contentPadding: EdgeInsets.symmetric(vertical: 8),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 8),
                           title: LottoBallWidget(data: jsonDecode(json)),
                           // 삭제 아이콘 버튼
                           trailing: IconButton(
@@ -132,7 +134,7 @@ class _LottoMainPageLottolistState extends State<LottoMainPageLottolist> {
 
                           onTap: () {
                             // 저장된 내역 클릭 시
-                            print("리스트 클릭!");
+                            log("리스트 클릭!");
                           },
                         ),
                       ],

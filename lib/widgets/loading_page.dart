@@ -7,12 +7,12 @@ class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(
+      color: Colors.white.withOpacity(0.8),
+      child: const Center(
         child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
         ),
       ),
-      color: Colors.white.withOpacity(0.8),
     );
   }
 }

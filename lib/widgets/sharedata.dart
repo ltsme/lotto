@@ -8,4 +8,4 @@ Color lottoColorBlue = Colors.blue.shade600;
 Color lottoColorGreen = Colors.green;
 
 // 이벤트 이미지 URL
-final String eventImg = 'assets/images/advertise_image.png';
+const String eventImg = 'assets/images/advertise_image.png';

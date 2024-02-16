@@ -45,6 +45,6 @@ class EnemyBlock extends SpriteComponent
 
   @override
   void update(double dt) {
-    super.update(dt);
+    //super.update(dt);
   }
 }

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:lotto/pages/login/lotto_loginpage.dart';
 import 'package:lotto/widgets/appbar.dart';
 import 'package:lotto/widgets/dialog.dart';
-import 'package:provider/provider.dart';
-import '../widgets/auth_service.dart';
 import 'lotto_mainpage_home.dart';
 import 'lotto_mainpage_mypage.dart';
 import 'lotto_mainpage_lottolist.dart';
@@ -23,12 +19,12 @@ class _LottoMainPage extends State<LottoMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWidget(context),
+      appBar: appBarWidget(context),
       body: WillPopScope(
         onWillPop: () => willPopScope(),
         child: IndexedStack(
           index: currentIndex,
-          children: [
+          children: const [
             LottoMainPageHome(),
             LottoMainPageLottolist(),
             LottoMainPageMyPage(),
@@ -59,6 +55,6 @@ class _LottoMainPage extends State<LottoMainPage> {
 
   // 뒤로가기 버튼 이벤트
   Future<bool> willPopScope() async {
-    return await WillPopDialogWidget(context);
+    return await willPopDialogWidget(context);
   }
 }
