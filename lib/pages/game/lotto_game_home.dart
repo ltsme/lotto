@@ -32,7 +32,10 @@ class LottoGameHome extends StatelessWidget {
             const SizedBox(height: 12),
             // 게임 1 이미지 버튼
             InkWell(
-              onTap: () {},
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LottoGameOne()),
+              ),
               child: Container(
                 width: (MediaQuery.of(context).size.width) * 0.9,
                 height: (MediaQuery.of(context).size.height) * 0.2,
@@ -93,46 +96,6 @@ class LottoGameHome extends StatelessWidget {
                   ],
                 ),
                 child: const Text('게임 2'),
-              ),
-            ),
-            const SizedBox(height: 24),
-            // 게임 3 텍스트
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-                children: [
-                  TextSpan(
-                    text: "게임 ",
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  TextSpan(text: "3"),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            // 게임 3 이미지 버튼
-            InkWell(
-              onTap: () {},
-              child: Container(
-                width: (MediaQuery.of(context).size.width) * 0.9,
-                height: (MediaQuery.of(context).size.height) * 0.2,
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5.0),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 1,
-                      spreadRadius: 1,
-                      offset: Offset(1, 1),
-                    ),
-                  ],
-                ),
-                child: const Text('게임 3'),
               ),
             ),
           ],
