@@ -14,8 +14,12 @@ class BrickBreaker extends FlameGame
     with HasCollisionDetection, KeyboardEvents, TapDetector {
   BrickBreaker()
       : super(
-            camera: CameraComponent.withFixedResolution(
-                width: gameWidth, height: gameHeight));
+          camera: CameraComponent.withFixedResolution(
+            width: gameWidth,
+            height: gameHeight,
+          ),
+        );
+  final ValueNotifier<int> score = ValueNotifier(0);
   final rand = math.Random();
   double get width => size.x;
   double get height => size.y;
@@ -23,6 +27,7 @@ class BrickBreaker extends FlameGame
   late PlayState _playState;
   PlayState get playState => _playState;
   set playState(PlayState playState) {
+    _playState = playState;
     switch (playState) {
       case PlayState.welcome:
       case PlayState.gameOver:
@@ -33,7 +38,6 @@ class BrickBreaker extends FlameGame
         overlays.remove(PlayState.welcome.name);
         overlays.remove(PlayState.gameOver.name);
         overlays.remove(PlayState.won.name);
-        break;
     }
   }
 
@@ -43,9 +47,10 @@ class BrickBreaker extends FlameGame
     super.onLoad();
     camera.viewfinder.anchor = Anchor.topLeft; // 좌상단으로 기준점
     world.add(PlayArea()); // PlayArea를 world에 추가
-    playState = PlayState.playing;
+    playState = PlayState.welcome; // 처음 onLoad()에서 playState 상태를 welcome으로 설정.
   }
 
+  // 게임을 초기화하고 시작하는 startGame() 메소드
   void startGame() {
     if (playState == PlayState.playing) return;
     world.removeAll(world.children.query<Ball>());
@@ -53,6 +58,7 @@ class BrickBreaker extends FlameGame
     world.removeAll(world.children.query<Brick>());
 
     playState = PlayState.playing;
+    score.value = 0;
 
     world.add(Ball(
         difficultyModifier: difficultyModifier,

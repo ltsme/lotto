@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lotto/pages/game/game1/lotto_game1.dart';
+import 'package:lotto/pages/game/game1/src/widgets/lotto_game1.dart';
 import 'package:lotto/pages/game/game2/lotto_game2.dart';
 import 'package:lotto/widgets/appbar.dart';
 

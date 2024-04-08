@@ -23,6 +23,7 @@ class Brick extends RectangleComponent
     // TODO: implement onCollisionStart
     super.onCollisionStart(intersectionPoints, other);
     removeFromParent();
+    game.score.value++; // score 점수 증가
 
     if (game.world.children.query<Brick>().length == 1) {
       game.playState = PlayState.won;
