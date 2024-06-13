@@ -29,11 +29,8 @@ Color accentColor = Colors.green.shade300;
 DateTime nowDate = DateTime.now();
 
 // 오늘 기준 토요일 saterdayDate
-var saterdayDate = DateTime(
-  nowDate.year,
-  nowDate.month,
-  nowDate.day + (7 - nowDate.weekday),
-);
+var saterdayDate =
+    DateTime(nowDate.year, nowDate.month, nowDate.day + (7 - nowDate.weekday));
 
 // 이벤트 Asset
 const String eventImg = "assets/images/advertise_image.png";
@@ -188,14 +185,15 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                               Row(
                                 children: [
                                   const Text(
-                                    "이번 추첨일 까지 / ",
+                                    "다음 추첨일 까지 / ",
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    // 삼항 연산자를 이용해 당일인 경우 0, 나머지는 차이만큼 표시
-                                    "- ${dDayDate.inDays == 0 ? "0" : dDayDate.inDays}일",
+                                    // 삼항 연산자를 이용해 당일인 경우, 나머지는 차이만큼 표시
+                                    //"- ${dDayDate.inDays == 0 ? "0" : dDayDate.inDays}일",
+                                    "${DateTime.parse(thisRoundlottoData['drwNoDate']).day + 7 - nowDate.day}일",
                                     style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -240,8 +238,9 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                         },
                                         icon: Image.asset(
                                           'assets/images/icon_qr.png',
+                                          width: 80,
+                                          height: 80,
                                         ),
-                                        iconSize: 80,
                                         tooltip: 'QR스캔하기',
                                       ),
                                       const Text('QR스캔하기')
@@ -255,8 +254,10 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                           _winningNumDialog();
                                         },
                                         icon: Image.asset(
-                                            'assets/images/icon_lottery.png'),
-                                        iconSize: 80,
+                                          'assets/images/icon_lottery.png',
+                                          width: 80,
+                                          height: 80,
+                                        ),
                                         tooltip: '당첨번호 확인',
                                       ),
                                       const Text('당첨번호 확인')
@@ -270,8 +271,10 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                                           _todayLuckyDialog();
                                         },
                                         icon: Image.asset(
-                                            'assets/images/icon_clover.png'),
-                                        iconSize: 80,
+                                          'assets/images/icon_clover.png',
+                                          width: 80,
+                                          height: 80,
+                                        ),
                                         tooltip: '오늘의 운세',
                                       ),
                                       const Text('오늘의 운세')

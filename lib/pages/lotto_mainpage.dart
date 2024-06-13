@@ -6,8 +6,7 @@ import 'lotto_mainpage_mypage.dart';
 import 'lotto_mainpage_lottolist.dart';
 
 class LottoMainPage extends StatefulWidget {
-  String uid = '';
-  LottoMainPage({Key? key, required this.uid}) : super(key: key);
+  LottoMainPage({Key? key}) : super(key: key);
 
   @override
   State<LottoMainPage> createState() => _LottoMainPage();

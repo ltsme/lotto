@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lotto/pages/lotto_mainpage.dart';
@@ -18,7 +20,6 @@ class LottoLoginPage extends StatefulWidget {
 class _LottoLoginPageState extends State<LottoLoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  // final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +103,7 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (_) =>
-                                          LottoMainPage(uid: event!.uid)),
+                                      builder: (_) => LottoMainPage()),
                                 );
                               });
                             },
@@ -190,23 +190,24 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
                             shape: const StadiumBorder(),
                           ),
                           onPressed: () {
-                            googleAuthSignIn();
+                            _googleAuthSignIn();
 
-                            FirebaseAuth.instance
-                                .authStateChanges()
-                                .listen((event) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("로그인 성공")),
-                              );
+                            // FirebaseAuth.instance
+                            //     .authStateChanges()
+                            //     .listen((event) {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     const SnackBar(content: Text("로그인 성공")),
+                            //   );
 
-                              // 로그인 성공 시 HomePage로 이동하면서 uid를 보내줌
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        LottoMainPage(uid: event!.uid)),
-                              );
-                            });
+                            //   // 로그인 성공 시 HomePage로 이동하면서 uid를 보내줌
+                            //   Navigator.pushReplacement(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (_) =>
+                            //           LottoMainPage(uid: event!.uid),
+                            //     ),
+                            //   );
+                            //});
                           },
                           child: const Text(
                             'Google로 계속하기',
@@ -228,18 +229,43 @@ class _LottoLoginPageState extends State<LottoLoginPage> {
     return await willPopDialogWidget(context);
   }
 
-  Future<UserCredential> googleAuthSignIn() async {
-    //구글 Sign in 플로우 오픈
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  void _googleAuthSignIn() async {
+    try {
+      //구글 Sign in 플로우 오픈
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    //구글 인증 정보 읽어오기
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+      //구글 인증 정보 읽어오기
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    //읽어온 인증정보로 파이어베이스 인증 로그인!
-    final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+      //읽어온 인증정보로 파이어베이스 인증 로그인!
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      print("Logged with Google: ${userCredential.user}");
+
+      FirebaseAuth.instance.authStateChanges().listen((event) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("로그인 성공")),
+        );
+      });
+
+      _gotoPage();
+    } catch (e) {
+      print(e);
+    }
     //파이어 베이스 Signin하고 결과(userCredential) 리턴햇!
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    //return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  void _gotoPage() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LottoMainPage(),
+      ),
+    );
   }
 }

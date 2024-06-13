@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:get/get.dart';
 import 'package:lotto/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:lotto/widgets/lotto_service.dart';
@@ -11,8 +12,9 @@ import 'package:http/http.dart' as http;
 Color appMainColor = Colors.blue.shade400;
 
 String zodiac = '';
-String constella = '';
+String yearStr = '';
 String msg = '';
+String img = '';
 
 class LottoTodayLucky extends StatefulWidget {
   final int yearStr, monthStr, dayStr;
@@ -29,8 +31,8 @@ class LottoTodayLucky extends StatefulWidget {
 class _LottoTodayLucky extends State<LottoTodayLucky> {
   @override
   void initState() {
-    getZodiac();
-    getConstella();
+    getYearStr(); // ~년생
+    getZodiac(); // ~띠
     getDate();
 
     super.initState();
@@ -48,6 +50,21 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    "assets/images/$img.png",
+                    width: context.width,
+                    height: context.width * 0.4,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  "$yearStr년생 $zodiac",
+                  style: const TextStyle(fontSize: 32),
+                ),
+                const SizedBox(height: 8),
                 Text(msg),
               ],
             ),
@@ -57,43 +74,60 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
     });
   }
 
+  void getYearStr() {
+    String TmpYearStr = widget.yearStr.toString();
+    yearStr = TmpYearStr.substring(TmpYearStr.length - 2);
+  }
+
   void getZodiac() {
     switch (widget.yearStr % 12) {
       case 0:
         zodiac = '원숭이띠';
+        img = 'zodiac_monkey';
         break;
       case 1:
         zodiac = '닭띠';
+        img = 'zodiac_chick';
         break;
       case 2:
         zodiac = '개띠';
+        img = 'zodiac_dog';
         break;
       case 3:
         zodiac = '돼지띠';
+        img = 'zodiac_pig';
         break;
       case 4:
         zodiac = '쥐띠';
+        img = 'zodiac_rat';
         break;
       case 5:
         zodiac = '소띠';
+        img = 'zodiac_cow';
         break;
       case 6:
         zodiac = '호랑이띠';
+        img = 'zodiac_tiger';
         break;
       case 7:
         zodiac = '토끼띠';
+        img = 'zodiac_rabbit';
         break;
       case 8:
         zodiac = '용띠';
+        img = 'zodiac_dragon';
         break;
       case 9:
         zodiac = '뱀띠';
+        img = 'zodiac_snake';
         break;
       case 10:
         zodiac = '말띠';
+        img = 'zodiac_horse';
         break;
       case 11:
         zodiac = '양띠';
+        img = 'zodiac_sheep';
         break;
 
       default:
@@ -101,8 +135,6 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
     log("message -> ${widget.yearStr % 12}");
     log("zodiac = $zodiac");
   }
-
-  void getConstella() {}
 
   Future getDate() async {
     var url = Uri.parse(
@@ -116,17 +148,21 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
       },
     );
 
-    var statusCode = response.statusCode;
-    var responseHeaders = response.headers;
-    var responseBody = utf8.decode(response.bodyBytes);
-    setState(() {
-      msg = responseBody;
-    });
+    log('get_statusCode : $response.statusCode');
 
-    log(response.body);
-
-    log('get_statusCode : $statusCode');
-    //print('get_responseHeaders : $responseHeaders');
-    log('get_responseBody : $responseBody'); // 한글을 위해
+    if (response.statusCode == 200) {
+      // JSON 응답 파싱
+      final Map<String, dynamic> data = json.decode(response.body);
+      log('MappedData : $data');
+      final items = data['items'] as List<dynamic>;
+      log('items : $items');
+      if (items.isNotEmpty) {
+        setState(() {
+          msg = items[0]['description'];
+        });
+      }
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 }

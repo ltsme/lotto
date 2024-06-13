@@ -37,11 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // 애플리케이션의 테마를 설정합니다.
       theme: ThemeData(textTheme: GoogleFonts.getTextTheme('Jua')),
-      home: user == null
-          ? const LottoOnboardingPage()
-          : LottoMainPage(
-              uid: user.uid,
-            ),
+      home: user == null ? const LottoOnboardingPage() : LottoMainPage(),
     );
   }
 }

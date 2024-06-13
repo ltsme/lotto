@@ -10,62 +10,57 @@ AppBar appBarWidget(BuildContext context) {
     elevation: 0,
     centerTitle: true,
     iconTheme: const IconThemeData(color: Colors.black),
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-            // 공통 스타일
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
-            children: [
-              TextSpan(
-                text: "L",
-                style: TextStyle(
-                  color: lottoColorBlue,
-                ),
-              ),
-              TextSpan(
-                text: "o",
-                style: TextStyle(
-                  color: appMainColor,
-                ),
-              ),
-              TextSpan(
-                text: "tt",
-                style: TextStyle(
-                  color: lottoColorBlue,
-                ),
-              ),
-              const TextSpan(
-                text: "o",
-                style: TextStyle(
-                  color: Colors.green,
-                ),
-              ),
-              const TextSpan(
-                text: " ",
-                style: TextStyle(fontSize: 5),
-              ),
-              TextSpan(
-                text: "6",
-                style: TextStyle(color: lottoColorBlue, fontSize: 19),
-              ),
-              const TextSpan(
-                text: "/",
-                style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 21,
-                ),
-              ),
-              TextSpan(
-                text: "45",
-                style: TextStyle(color: lottoColorBlue, fontSize: 19),
-              ),
-            ],
+    title: RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        // 공통 스타일
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 36),
+        children: [
+          TextSpan(
+            text: "L",
+            style: TextStyle(
+              color: lottoColorBlue,
+            ),
           ),
-        ),
-      ],
+          TextSpan(
+            text: "o",
+            style: TextStyle(
+              color: appMainColor,
+            ),
+          ),
+          TextSpan(
+            text: "tt",
+            style: TextStyle(
+              color: lottoColorBlue,
+            ),
+          ),
+          const TextSpan(
+            text: "o",
+            style: TextStyle(
+              color: Colors.green,
+            ),
+          ),
+          const TextSpan(
+            text: " ",
+            style: TextStyle(fontSize: 5),
+          ),
+          TextSpan(
+            text: "6",
+            style: TextStyle(color: lottoColorBlue, fontSize: 19),
+          ),
+          const TextSpan(
+            text: "/",
+            style: TextStyle(
+              color: Colors.green,
+              fontSize: 21,
+            ),
+          ),
+          TextSpan(
+            text: "45",
+            style: TextStyle(color: lottoColorBlue, fontSize: 19),
+          ),
+        ],
+      ),
     ),
     actions: [
       IconButton(

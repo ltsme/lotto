@@ -29,6 +29,78 @@ class _LottoSignUpPageState extends State<LottoSignUpPage> {
     return Consumer<AuthService>(builder: (context, authservice, child) {
       User? user = authservice.currentUser();
       return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.black),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  // 공통 스타일
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 35),
+                  children: [
+                    TextSpan(
+                      text: "L",
+                      style: TextStyle(
+                        color: Colors.blue.shade700,
+                        fontSize: 35,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "o",
+                      style: TextStyle(
+                        color: appMainColor,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "tt",
+                      style: TextStyle(
+                        color: Colors.blue.shade700,
+                      ),
+                    ),
+                    const TextSpan(
+                      text: "o",
+                      style: TextStyle(
+                        color: Colors.green,
+                      ),
+                    ),
+                    const TextSpan(
+                      text: " ",
+                      style: TextStyle(fontSize: 5),
+                    ),
+                    TextSpan(
+                      text: "6",
+                      style:
+                          TextStyle(color: Colors.blue.shade700, fontSize: 19),
+                    ),
+                    const TextSpan(
+                      text: "/",
+                      style: TextStyle(color: Colors.green, fontSize: 20),
+                    ),
+                    TextSpan(
+                      text: "45",
+                      style:
+                          TextStyle(color: Colors.blue.shade700, fontSize: 19),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // 가운데 정렬 UI를을 위한 숨겨진 아이콘
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.abc, color: Colors.white),
+            ),
+          ],
+          // title: Image.asset('assets/images/logo.png', height: 32),
+        ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Padding(
