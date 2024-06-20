@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:lotto/pages/lotto_mainpage.dart';
 import 'package:lotto/pages/login/lotto_onboardingpage.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,11 @@ late SharedPreferences preferences;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // main() 함수에서 async를 쓰려면 필요
   await Firebase.initializeApp(); // firebase 앱 시작
+  await NaverMapSdk.instance.initialize(
+      clientId: "rttrpib4ti",
+      onAuthFailed: (ex) {
+        print("********* 네이버맵 인증오류 : $ex *********");
+      }); // naver 지도 초기화
 
   runApp(MultiProvider(
     providers: [

@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:lotto/pages/game/lotto_game_home.dart';
-import 'package:lotto/pages/kakao_map_screen.dart';
+import 'package:lotto/pages/lotto_naver_map.dart';
 import 'package:lotto/pages/lotto_todaylucky.dart';
 import 'package:lotto/widgets/loading_page.dart';
 import 'package:lotto/widgets/lotto_ball.dart';
@@ -13,7 +12,6 @@ import 'package:lotto/widgets/qrscan.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:http/http.dart' as http;
-
 import 'lotto_getnumberpage.dart';
 
 // Lotto 앱 메인 컬러
@@ -86,7 +84,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   final textController = TextEditingController();
   final textControllerY = TextEditingController();
   final textControllerM = TextEditingController();
-  final textControllerD = TextEditingController();
   final dialogController = TextEditingController(text: '');
   final dialogController2 = TextEditingController(text: '');
 
@@ -96,7 +93,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
   void initState() {
     log('initState');
     getLottoData(thisRoundDrwNo);
-    _getLocation();
     super.initState();
   }
 
@@ -337,8 +333,13 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                               ),
                             ),
                             InkWell(
-                              onTap: () async {
-                                await openKakaoMap(context);
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LottoNaverMap(),
+                                  ),
+                                );
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(8),
@@ -767,19 +768,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                     ),
                   ),
                   const Text("월"),
-                  SizedBox(
-                    width: 30,
-                    height: 20,
-                    child: TextField(
-                      textAlign: TextAlign.center,
-                      controller: textControllerD,
-                      maxLength: 2,
-                      enabled: true,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(counterText: ''),
-                    ),
-                  ),
-                  const Text("일"),
                 ],
               ),
               TextField(
@@ -800,7 +788,6 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                 Navigator.pop(context);
                 textControllerY.text = '';
                 textControllerM.text = '';
-                textControllerD.text = '';
                 dialogController2.text = '';
               },
             ),
@@ -815,27 +802,18 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
                   setState(() {
                     dialogController2.text = '월을 확인해 주세요!';
                   });
-                } else if (textControllerD.text.isEmpty) {
-                  setState(() {
-                    dialogController2.text = '일을 확인해 주세요!';
-                  });
                 } else {
                   int year = int.parse(textControllerY.text);
                   int month = int.parse(textControllerM.text);
-                  int day = int.parse(textControllerD.text);
                   Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => LottoTodayLucky(
-                              yearStr: year,
-                              monthStr: month,
-                              dayStr: day,
-                            )),
+                        builder: (context) =>
+                            LottoTodayLucky(yearStr: year, monthStr: month)),
                   );
                   textControllerY.text = '';
                   textControllerM.text = '';
-                  textControllerD.text = '';
                   dialogController2.text = '';
                 }
               },
@@ -846,42 +824,7 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
     );
   }
 
-  // ----- 메소드 -----
-
-  // 현재 위 경도 구하는 메소드
-  Future<void> _getLocation() async {
-    // Geolocator 패키지는 위치 정보를 가져오는 기능을 제공
-    LocationPermission permission = await Geolocator.requestPermission();
-
-    if (permission == LocationPermission.always) {
-      log("permission = always");
-      testPermissiion == 'Always';
-      mapPermission = true;
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-
-      setState(() {
-        posLat = position.latitude;
-        posLon = position.longitude;
-        log("setState Test lat = $posLat, lon = $posLon");
-      });
-    } else if (permission == LocationPermission.whileInUse) {
-      log("permission = whileInUse");
-      testPermissiion == 'whileInUse';
-      mapPermission = true;
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-
-      setState(() {
-        posLat = position.latitude;
-        posLon = position.longitude;
-        log("setState Test lat = $posLat, lon = $posLon");
-      });
-    } else {
-      mapPermission = false;
-      testPermissiion = 'denied';
-    }
-  }
+  // ----------------------- 메소드 ------------------------------
 
   // 회차번호를 받아 로또 데이터를 리턴하는 메소드
   getLottoData(int thisRoundDrwNo) async {
@@ -930,17 +873,5 @@ class _LottoMainPageHome extends State<LottoMainPageHome> {
     await canLaunchUrlString(url) // canLaunch 대신 canLaunchUrlString을 사용하자
         ? await launch(url)
         : throw 'Could not launch $url';
-  }
-
-  // 로또 판매점 찾기 지도 api
-  Future<void> openKakaoMap(BuildContext context) async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => KakaoMapScreen(
-                posLat: posLat,
-                posLon: posLon,
-              )),
-    );
   }
 }

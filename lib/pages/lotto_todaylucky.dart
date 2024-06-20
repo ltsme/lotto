@@ -17,12 +17,9 @@ String msg = '';
 String img = '';
 
 class LottoTodayLucky extends StatefulWidget {
-  final int yearStr, monthStr, dayStr;
+  final int yearStr, monthStr;
   const LottoTodayLucky(
-      {super.key,
-      required this.yearStr,
-      required this.monthStr,
-      required this.dayStr});
+      {super.key, required this.yearStr, required this.monthStr});
 
   @override
   State<LottoTodayLucky> createState() => _LottoTodayLucky();
@@ -147,8 +144,6 @@ class _LottoTodayLucky extends State<LottoTodayLucky> {
         "X-Naver-Client-Secret": "X2t8njWhHP"
       },
     );
-
-    log('get_statusCode : $response.statusCode');
 
     if (response.statusCode == 200) {
       // JSON 응답 파싱
